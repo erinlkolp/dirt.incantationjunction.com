@@ -195,6 +195,19 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 
       .btn-ghost { border-color: var(--line); background: var(--surface); }
 
+      /* Links set in running prose. Every other link on the site is a nav
+         item or a button and styles itself; this is the one that has to look
+         like a link inside a sentence. */
+      .text-link {
+        color: var(--brand);
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+        text-decoration-thickness: 1px;
+        font-weight: 550;
+      }
+
+      .text-link:hover { text-decoration-thickness: 2px; }
+
       .section { padding: clamp(3rem, 8vw, 5.5rem) 0; }
 
       .section-alt {
