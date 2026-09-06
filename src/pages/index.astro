@@ -1,0 +1,538 @@
+---
+import Base from '../layouts/Base.astro';
+
+// NOTE: All copy below is placeholder/demo content for SipsCo (premium dirt).
+// Replace the strings in `services`, `stats`, and the section prose with real
+// company information before treating this as a live corporate site.
+
+const year = new Date().getFullYear();
+
+const services = [
+  {
+    title: 'Custom Blending',
+    body: 'We formulate to your spec — texture class, drainage, organic fraction, pH — and keep the recipe on file so the next order matches the last one.',
+  },
+  {
+    title: 'Testing & Analysis',
+    body: 'In-house lab work on every batch: particle size, organic matter, pH, soluble salts, and macronutrients, reported before the truck leaves the yard.',
+  },
+  {
+    title: 'Bulk Delivery',
+    body: 'Live-bottom and dump delivery by the cubic yard, plus supersack and bagged formats for sites where a tipping truck will not fit.',
+  },
+];
+
+const stats = [
+  { figure: '220K', label: 'Cubic yards delivered yearly' },
+  { figure: '34', label: 'Standard blends' },
+  { figure: '48h', label: 'Typical lead time' },
+  { figure: '100%', label: 'Batches lab-tested' },
+];
+---
+
+<Base
+  title="SipsCo — Premium dirt, engineered to grow"
+  description="SipsCo blends, tests, and delivers premium topsoil, compost, and custom growing substrates for commercial growers, landscape contractors, and municipal projects."
+>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#top">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">SipsCo</span>
+      </a>
+      <nav aria-label="Primary">
+        <ul class="nav">
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">What we do</a></li>
+          <li><a href="#numbers">Company</a></li>
+          <li><a class="nav-cta" href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="wrap hero-inner">
+        <p class="eyebrow">Soil blending &amp; bulk supply</p>
+        <h1>Premium dirt. Engineered to grow.</h1>
+        <p class="lede">
+          SipsCo blends, tests, and delivers topsoil, compost, and custom
+          substrates for commercial growers, landscape contractors, and
+          municipal projects — every batch with a lab report attached.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#contact">Request a quote</a>
+          <a class="btn btn-ghost" href="#services">See what we do</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about" aria-labelledby="about-h">
+      <div class="wrap grid-2">
+        <div>
+          <p class="eyebrow">About</p>
+          <h2 id="about-h">Dirt is a specification, not a commodity.</h2>
+        </div>
+        <div>
+          <p>
+            Most soil is sold by the truckload and described by the adjective.
+            We treat it as a spec: every SipsCo blend carries a documented
+            texture class, organic matter fraction, pH range, and nutrient
+            profile, and every delivery ships with the lab report for that
+            batch.
+          </p>
+          <p>
+            That means a grower can reorder in March and get the same medium
+            they dialed in last August. It is an unglamorous promise, and it is
+            the entire company.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="services" aria-labelledby="services-h">
+      <div class="wrap">
+        <p class="eyebrow">What we do</p>
+        <h2 id="services-h">Three capabilities, one yard.</h2>
+        <ul class="cards">
+          {services.map((s) => (
+            <li class="card">
+              <h3>{s.title}</h3>
+              <p>{s.body}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="numbers" aria-labelledby="numbers-h">
+      <div class="wrap">
+        <p class="eyebrow">By the numbers</p>
+        <h2 id="numbers-h">The company at a glance.</h2>
+        <dl class="stats">
+          {stats.map((s) => (
+            <div class="stat">
+              <dt class="stat-figure">{s.figure}</dt>
+              <dd class="stat-label">{s.label}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+
+    <section class="section contact" id="contact" aria-labelledby="contact-h">
+      <div class="wrap contact-inner">
+        <div>
+          <h2 id="contact-h">Tell us what you're growing.</h2>
+          <p>
+            Send a spec, a soil test, or just a description of the site — we
+            will come back with a blend recommendation and a quote within two
+            business days.
+          </p>
+        </div>
+        <ul class="contact-list">
+          <li>
+            <span class="contact-label">General</span>
+            <a href="mailto:hello@sipsco.example">hello@sipsco.example</a>
+          </li>
+          <li>
+            <span class="contact-label">Bulk orders</span>
+            <a href="mailto:orders@sipsco.example">orders@sipsco.example</a>
+          </li>
+          <li>
+            <span class="contact-label">Press</span>
+            <a href="mailto:press@sipsco.example">press@sipsco.example</a>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" aria-labelledby="footer-h">
+    <h2 id="footer-h" class="visually-hidden">Site footer</h2>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="#top">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span class="brand-name">SipsCo</span>
+          </a>
+          <p class="footer-blurb">
+            Blending, testing, and delivering premium dirt by the cubic yard.
+          </p>
+        </div>
+
+        <nav class="footer-col" aria-label="Company">
+          <h3>Company</h3>
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#numbers">At a glance</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="mailto:press@sipsco.example">Press</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-col" aria-label="Services">
+          <h3>Services</h3>
+          <ul>
+            <li><a href="#services">Custom blending</a></li>
+            <li><a href="#services">Testing &amp; analysis</a></li>
+            <li><a href="#services">Bulk delivery</a></li>
+            <li><a href="mailto:orders@sipsco.example">Wholesale</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-col" aria-label="Legal">
+          <h3>Legal</h3>
+          <ul>
+            {/* Placeholder destinations — no legal pages exist yet. */}
+            <li><a href="#">Privacy policy</a></li>
+            <li><a href="#">Terms of service</a></li>
+            <li><a href="#">Cookie policy</a></li>
+            <li><a href="#">Accessibility</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="copyright">&copy; {year} SipsCo. All rights reserved.</p>
+        <p class="footer-note">Built with Astro. Hosted on GitHub Pages.</p>
+      </div>
+    </div>
+  </footer>
+</Base>
+
+<style>
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0 0 0.75rem;
+  }
+
+  /* ---------- header ---------- */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 68px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-size: 1.15rem;
+  }
+
+  .brand-mark {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: var(--brand);
+    position: relative;
+    flex: none;
+  }
+
+  .brand-mark::after {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 2px solid var(--brand-ink);
+    border-radius: 50% 0 50% 0;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.75rem, 2.5vw, 1.75rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.95rem;
+  }
+
+  .nav a {
+    text-decoration: none;
+    color: var(--ink-soft);
+    font-weight: 550;
+  }
+
+  .nav a:hover { color: var(--ink); }
+
+  .nav-cta {
+    background: var(--brand);
+    color: var(--brand-ink) !important;
+    padding: 0.45rem 0.95rem;
+    border-radius: 999px;
+  }
+
+  .nav li:nth-child(3) { display: none; }
+
+  @media (min-width: 620px) {
+    .nav li:nth-child(3) { display: list-item; }
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    padding: clamp(3.5rem, 11vw, 7.5rem) 0 clamp(3rem, 8vw, 5.5rem);
+    background:
+      radial-gradient(
+        70ch 40ch at 15% -10%,
+        color-mix(in srgb, var(--brand) 16%, transparent),
+        transparent 70%
+      ),
+      var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hero-inner { max-width: 62ch; }
+
+  .hero h1 {
+    font-size: clamp(2.25rem, 6.2vw, 4rem);
+    margin-bottom: 0.4em;
+  }
+
+  .lede {
+    font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+    color: var(--ink-soft);
+    margin-bottom: 2rem;
+  }
+
+  .cta-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+  .btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    border: 1px solid transparent;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+
+  .btn:hover { transform: translateY(-1px); }
+
+  .btn-primary { background: var(--brand); color: var(--brand-ink); }
+
+  .btn-ghost { border-color: var(--line); background: var(--surface); }
+
+  /* ---------- sections ---------- */
+  .section { padding: clamp(3rem, 8vw, 5.5rem) 0; }
+
+  .section-alt {
+    background: var(--surface-alt);
+    border-block: 1px solid var(--line);
+  }
+
+  .section h2 { font-size: clamp(1.6rem, 3.6vw, 2.3rem); }
+
+  .grid-2 {
+    display: grid;
+    gap: clamp(1rem, 4vw, 3rem);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 800px) {
+    .grid-2 { grid-template-columns: 1fr 1.15fr; }
+  }
+
+  .grid-2 p { color: var(--ink-soft); }
+
+  /* ---------- cards ---------- */
+  .cards {
+    list-style: none;
+    margin: 2.25rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.6rem;
+  }
+
+  .card h3 { font-size: 1.15rem; }
+
+  .card p { color: var(--ink-soft); margin: 0; }
+
+  /* ---------- stats ---------- */
+  .stats {
+    margin: 2.25rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  }
+
+  .stat {
+    border-top: 3px solid var(--brand);
+    padding-top: 1rem;
+  }
+
+  .stat-figure {
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .stat-label {
+    margin: 0.4rem 0 0;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+
+  /* ---------- contact ---------- */
+  .contact {
+    background: var(--brand);
+    color: var(--brand-ink);
+  }
+
+  .contact .eyebrow { color: inherit; opacity: 0.8; }
+
+  .contact p { opacity: 0.9; max-width: 46ch; }
+
+  .contact-inner {
+    display: grid;
+    gap: clamp(1.5rem, 5vw, 3rem);
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  @media (min-width: 800px) {
+    .contact-inner { grid-template-columns: 1.2fr 1fr; }
+  }
+
+  .contact-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .contact-list li {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+    padding-top: 0.7rem;
+  }
+
+  .contact-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    opacity: 0.75;
+  }
+
+  .contact-list a {
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 45%, transparent);
+    align-self: flex-start;
+  }
+
+  /* ---------- footer ---------- */
+  .site-footer {
+    background: var(--surface-alt);
+    border-top: 1px solid var(--line);
+    padding: clamp(2.5rem, 6vw, 4rem) 0 1.75rem;
+    font-size: 0.95rem;
+  }
+
+  .footer-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .footer-grid { grid-template-columns: repeat(3, 1fr); }
+    .footer-brand { grid-column: 1 / -1; }
+  }
+
+  @media (min-width: 940px) {
+    .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; }
+    .footer-brand { grid-column: auto; }
+  }
+
+  .footer-blurb {
+    color: var(--ink-soft);
+    margin: 0.9rem 0 0;
+    max-width: 34ch;
+  }
+
+  .footer-col h3 {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-soft);
+    margin-bottom: 0.9rem;
+  }
+
+  .footer-col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .footer-col a {
+    text-decoration: none;
+    color: var(--ink-soft);
+  }
+
+  .footer-col a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+
+  .footer-bottom {
+    margin-top: clamp(2rem, 5vw, 3rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--ink-soft);
+    font-size: 0.875rem;
+  }
+
+  .copyright { margin: 0; }
+
+  .footer-note { margin: 0; opacity: 0.8; }
+</style>

@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check, build and verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Astro check (types and templates)
+        run: npm run check
+
+      - name: Build
+        run: npm run build
+
+      - name: Assert required output
+        run: |
+          set -euo pipefail
+          test -f dist/index.html
+          test -f dist/CNAME
+          test -f dist/.nojekyll
+          grep -q 'dirt.incantationjunction.com' dist/CNAME
+          grep -q 'All rights reserved' dist/index.html
+          grep -q "$(date -u +%Y) SipsCo" dist/index.html
+
+      # --offline needs --root-dir or every root-relative href fails to resolve.
+      - name: Link check
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --offline
+            --root-dir "${{ github.workspace }}/dist"
+            --exclude '^mailto:'
+            --no-progress
+            "dist/**/*.html"
+          fail: true
