@@ -49,6 +49,7 @@ jobs:
           # the R&D page is a second route, so a build that silently drops it
           # would still pass every assertion above
           test -f dist/rnd/index.html
+          test -f dist/rnd/unit-7/index.html
 
       # --offline needs --root-dir or every root-relative href fails to resolve.
       - name: Link check

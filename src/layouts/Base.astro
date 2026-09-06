@@ -275,6 +275,40 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         color: var(--ink-soft);
       }
 
+      /* Site chrome is navigation, and navigation is meaningless on paper.
+         The footer's legal line is not: it carries the trademark and the
+         Mojang disclaimer, so that block stays and only the link columns go. */
+      @media print {
+        /* Paper is white whatever the screen was. Without this, printing
+           from a dark-mode browser puts near-white ink on a white page:
+           backgrounds are dropped by default but text colour is not.
+           Redefining the tokens fixes every element at once. */
+        :root {
+          --bg: #ffffff;
+          --surface: #ffffff;
+          --surface-alt: #ffffff;
+          --ink: #000000;
+          --ink-soft: #333333;
+          --line: #999999;
+          --brand: #000000;
+          --brand-ink: #ffffff;
+          --accent: #333333;
+          color-scheme: light;
+        }
+
+        body { background: #ffffff; color: #000000; }
+
+        .skip-link,
+        .site-header,
+        .footer-grid { display: none !important; }
+
+        .site-footer {
+          border-top: 1px solid #000;
+          padding: 0.75rem 0 0;
+          font-size: 8pt;
+        }
+      }
+
       /* Date credit sits on its own line under the caption, set in the same
          uppercase key as .news-meta so the two dates read as one system. */
       .photo-credit {
