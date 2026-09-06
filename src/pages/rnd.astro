@@ -1,0 +1,149 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// NOTE: As with the homepage, all copy here is placeholder/demo content.
+// The block icons reuse the three variants the homepage services cards do
+// not: grass, coarse, and sand.
+const programmes = [
+  {
+    icon: '/img/grass-block.svg',
+    title: 'Autonomous Extraction',
+    body:
+      'A small fleet of programmable extraction units works the north face ' +
+      'unattended, cutting to a depth our crews would need shoring for. Each ' +
+      'unit returns to the pad on its own, and most of them return with dirt.',
+  },
+  {
+    icon: '/img/coarse-block.svg',
+    title: 'Substrate Telemetry',
+    body:
+      'Sensor packs seeded through a delivered load report moisture, ' +
+      'temperature, and pH back to the yard for the life of the substrate. ' +
+      'Growers receive a monthly summary. The soil files continuously.',
+  },
+  {
+    icon: '/img/sand-block.svg',
+    title: 'Blend Formulation',
+    body:
+      'The pilot line turns a proposed recipe into a lab-panelled sample in ' +
+      'under a day, which is how thirty-four standard blends emerged from ' +
+      'roughly nine hundred candidates. Blend No. 0 remains sealed.',
+  },
+];
+---
+
+<Base
+  title="Research & Development — SipsCo"
+  description="The SipsCo Research & Development department: autonomous extraction, substrate telemetry, and blend formulation for premium engineered soil."
+>
+  <Header />
+
+  <main id="main">
+    <section class="section page-head" id="top">
+      <div class="wrap">
+        <p class="eyebrow">Research &amp; Development</p>
+        <h1>The department that digs first.</h1>
+        <p class="page-lede">
+          R&amp;D exists to answer one question ahead of the yard: what should
+          the next blend be, and what will it take to get it out of the ground?
+          Everything below is in active trial. None of it is in the catalogue
+          yet.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="unit-h">
+      <div class="wrap grid-2">
+        <div>
+          <p class="eyebrow">Field trial</p>
+          <h2 id="unit-h">Unit 7 works the night shift.</h2>
+          <p>
+            Our first autonomous extraction unit has been cutting the north
+            face since spring, on a route it revises itself. It does not take
+            breaks, it does not need the lights on, and it has never once
+            asked what the dirt is for.
+          </p>
+          <p>
+            Uptime is 94%. The remaining 6% is spent waiting for someone to
+            come and empty it.
+          </p>
+        </div>
+        <figure class="photo-figure">
+          <img
+            src="/img/mining-turtle.webp"
+            width="665"
+            height="557"
+            alt="A white automated mining machine with a diamond pickaxe mounted on its side, parked on a grass field in front of a mossy cliff"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>
+            Unit 7 between cuts, north face. Pickaxe is consumable and rated
+            for one shift.
+            <span class="photo-credit">
+              SipsCo &middot; <time datetime="2026-09-05">September 5, 2026</time>
+            </span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="programmes-h">
+      <div class="wrap">
+        <p class="eyebrow">Current programmes</p>
+        <h2 id="programmes-h">Three things we are working on.</h2>
+        <ul class="cards">
+          {programmes.map((p) => (
+            <li class="card">
+              <img class="card-icon" src={p.icon} width="76" height="76" alt="" loading="lazy" decoding="async" />
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section-alt rnd-closing" aria-labelledby="rnd-cta-h">
+      <div class="wrap">
+        <h2 id="rnd-cta-h">Want a blend that does not exist yet?</h2>
+        <p>
+          Wholesale partners can put a formulation request straight to the
+          department. We will tell you honestly whether it is soil science or
+          a landscaping problem.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="/#contact">Talk to the yard</a>
+          <a class="btn btn-ghost" href="/#news">Read the newsroom</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  /* The homepage opens on a full hero; this page opens on a plain heading
+     block, so it needs its own h1 sizing rather than the hero's. */
+  .page-head h1 {
+    font-size: clamp(1.9rem, 5vw, 3rem);
+    max-width: 18ch;
+  }
+
+  .page-lede {
+    font-size: clamp(1.05rem, 2vw, 1.2rem);
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin-bottom: 0;
+  }
+
+  .rnd-closing p {
+    color: var(--ink-soft);
+    max-width: 52ch;
+  }
+
+  .rnd-closing .cta-row { margin-top: 1.5rem; }
+</style>

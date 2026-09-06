@@ -42,9 +42,13 @@ jobs:
           # silently promoted to (R), which would be unlawful unregistered
           grep -q 'Big Money, Big Women, Big Fun&trade;' dist/index.html
           ! grep -q 'Big Fun&reg;' dist/index.html
-          # photography must survive the build; these are referenced by the page
+          # photography must survive the build; these are referenced by the pages
           test -f dist/img/another-happy-customer.webp
           test -f dist/img/sjin-factory-tour.webp
+          test -f dist/img/mining-turtle.webp
+          # the R&D page is a second route, so a build that silently drops it
+          # would still pass every assertion above
+          test -f dist/rnd/index.html
 
       # --offline needs --root-dir or every root-relative href fails to resolve.
       - name: Link check
