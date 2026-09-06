@@ -9,14 +9,17 @@ const year = new Date().getFullYear();
 
 const services = [
   {
+    icon: '/img/strata-block.svg',
     title: 'Custom Blending',
     body: 'We formulate to your spec — texture class, drainage, organic fraction, pH — and keep the recipe on file so the next order matches the last one.',
   },
   {
+    icon: '/img/dirt-block.svg',
     title: 'Testing & Analysis',
     body: 'In-house lab work on every batch: particle size, organic matter, pH, soluble salts, and macronutrients, reported before the truck leaves the yard.',
   },
   {
+    icon: '/img/stack-block.svg',
     title: 'Bulk Delivery',
     body: 'Live-bottom and dump delivery by the cubic yard, plus supersack and bagged formats for sites where a tipping truck will not fit.',
   },
@@ -54,6 +57,7 @@ const stats = [
   <main id="main">
     <section class="hero" id="top">
       <div class="wrap hero-inner">
+        <div class="hero-copy">
         <p class="eyebrow">Soil blending &amp; bulk supply</p>
         <h1>Premium dirt. Engineered to grow.</h1>
         <p class="lede">
@@ -64,6 +68,17 @@ const stats = [
         <div class="cta-row">
           <a class="btn btn-primary" href="#contact">Request a quote</a>
           <a class="btn btn-ghost" href="#services">See what we do</a>
+        </div>
+        </div>
+        <div class="hero-art">
+          <img
+            src="/img/grass-block.svg"
+            width="340"
+            height="340"
+            alt="Isometric pixel-art block of grass-topped soil"
+            loading="eager"
+            decoding="async"
+          />
         </div>
       </div>
     </section>
@@ -98,6 +113,16 @@ const stats = [
         <ul class="cards">
           {services.map((s) => (
             <li class="card">
+              <img
+                class="card-icon"
+                src={s.icon}
+                width="76"
+                height="76"
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                decoding="async"
+              />
               <h3>{s.title}</h3>
               <p>{s.body}</p>
             </li>
@@ -312,7 +337,42 @@ const stats = [
     border-bottom: 1px solid var(--line);
   }
 
-  .hero-inner { max-width: 62ch; }
+  .hero-inner {
+    display: grid;
+    gap: clamp(2rem, 6vw, 3.5rem);
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+
+  .hero-copy { max-width: 62ch; }
+
+  @media (min-width: 900px) {
+    .hero-inner { grid-template-columns: 1.1fr 0.9fr; }
+  }
+
+  .hero-art {
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero-art img {
+    width: min(340px, 72vw);
+    height: auto;
+    filter: drop-shadow(0 18px 26px rgb(0 0 0 / 0.28));
+    animation: hover-block 6s ease-in-out infinite;
+  }
+
+  @keyframes hover-block {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .card-icon {
+    width: 76px;
+    height: auto;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.22));
+  }
 
   .hero h1 {
     font-size: clamp(2.25rem, 6.2vw, 4rem);
