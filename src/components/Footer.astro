@@ -1,0 +1,155 @@
+---
+// Site footer. As in the header, section links are root-relative so they work
+// from any page, not just the homepage.
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer" aria-labelledby="footer-h">
+  <h2 id="footer-h" class="visually-hidden">Site footer</h2>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/#top">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">SipsCo</span>
+        </a>
+        <p class="footer-blurb">
+          Blending, testing, and delivering premium dirt by the cubic yard.
+        </p>
+      </div>
+
+      <nav class="footer-col" aria-label="Company">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="/#about">About</a></li>
+          <li><a href="/#numbers">At a glance</a></li>
+          <li><a href="/#news">News</a></li>
+          <li><a href="/rnd/">Research &amp; Development</a></li>
+          <li><a href="/#contact">Contact</a></li>
+          <li><a href="mailto:press@dirt.incantationjunction.com">Press</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-col" aria-label="Services">
+        <h3>Services</h3>
+        <ul>
+          <li><a href="/#services">Custom blending</a></li>
+          <li><a href="/#services">Testing &amp; analysis</a></li>
+          <li><a href="/#services">Bulk delivery</a></li>
+          <li><a href="mailto:orders@dirt.incantationjunction.com">Wholesale</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-col" aria-label="Legal">
+        <h3>Legal</h3>
+        <ul>
+          {/* Placeholder destinations — no legal pages exist yet. */}
+          <li><a href="#">Privacy policy</a></li>
+          <li><a href="#">Terms of service</a></li>
+          <li><a href="#">Cookie policy</a></li>
+          <li><a href="#">Accessibility</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <p class="motto">Big Money, Big Women, Big Fun&trade;</p>
+        <p class="copyright">&copy; {year} SipsCo. All rights reserved.</p>
+      </div>
+      <p class="footer-note">
+        Built with Astro. Hosted on GitHub Pages. Photography on this site
+        consists of Minecraft screenshots; not affiliated with or endorsed by
+        Mojang Studios.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--surface-alt);
+    border-top: 1px solid var(--line);
+    padding: clamp(2.5rem, 6vw, 4rem) 0 1.75rem;
+    font-size: 0.95rem;
+  }
+
+  .footer-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .footer-grid { grid-template-columns: repeat(3, 1fr); }
+    .footer-brand { grid-column: 1 / -1; }
+  }
+
+  @media (min-width: 940px) {
+    .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; }
+    .footer-brand { grid-column: auto; }
+  }
+
+  .footer-blurb {
+    color: var(--ink-soft);
+    margin: 0.9rem 0 0;
+    max-width: 34ch;
+  }
+
+  .footer-col h3 {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-soft);
+    margin-bottom: 0.9rem;
+  }
+
+  .footer-col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .footer-col a {
+    text-decoration: none;
+    color: var(--ink-soft);
+  }
+
+  .footer-col a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+
+  .footer-bottom {
+    margin-top: clamp(2rem, 5vw, 3rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--ink-soft);
+    font-size: 0.875rem;
+  }
+
+  .footer-legal {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  /* Unregistered mark: TM only. Never swap this for (R) without a USPTO
+     registration — asserting (R) on an unregistered mark is unlawful. */
+  .motto {
+    margin: 0;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .copyright { margin: 0; }
+
+  .footer-note { margin: 0; opacity: 0.8; }
+</style>

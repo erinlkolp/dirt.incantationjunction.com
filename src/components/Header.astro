@@ -1,0 +1,76 @@
+---
+// Site header. Nav destinations are root-relative ("/#news") rather than bare
+// fragments ("#news"): those sections live on the homepage only, so on any
+// other page a bare fragment would resolve to nothing and silently do nothing.
+---
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/#top">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">SipsCo</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="nav">
+        <li><a href="/#about">About</a></li>
+        <li class="nav-wide"><a href="/#services">What we do</a></li>
+        <li class="nav-wide"><a href="/#numbers">Company</a></li>
+        <li class="nav-wide"><a href="/#news">News</a></li>
+        <li class="nav-wide"><a href="/rnd/">R&amp;D</a></li>
+        <li><a class="nav-cta" href="/#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 68px;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.75rem, 2.5vw, 1.75rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.95rem;
+  }
+
+  .nav a {
+    text-decoration: none;
+    color: var(--ink-soft);
+    font-weight: 550;
+  }
+
+  .nav a:hover { color: var(--ink); }
+
+  .nav-cta {
+    background: var(--brand);
+    color: var(--brand-ink) !important;
+    padding: 0.45rem 0.95rem;
+    border-radius: 999px;
+  }
+
+  /* Class-based rather than nth-child so adding nav items cannot silently
+     change which one gets hidden on narrow screens. */
+  .nav-wide { display: none; }
+
+  @media (min-width: 760px) {
+    .nav-wide { display: list-item; }
+  }
+</style>
