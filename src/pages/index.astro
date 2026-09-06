@@ -43,6 +43,8 @@ const news = [
       'plant, orange gantries and a settling pond behind, in heavy rain',
     caption:
       'CEO Sjin on site at the new plant, ahead of October commissioning.',
+    photoDatetime: '2026-09-02',
+    photoDate: 'September 2, 2026',
   },
   {
     datetime: '2026-08-18',
@@ -195,6 +197,9 @@ const stats = [
           <figcaption>
             Unverified customer relocating roughly 0.03 yd&sup3; of Standard
             Topsoil, unassisted and without a quote.
+            <span class="photo-credit">
+              SipsCo &middot; <time datetime="2026-08-29">August 29, 2026</time>
+            </span>
           </figcaption>
         </figure>
       </div>
@@ -238,7 +243,13 @@ const stats = [
                     loading="lazy"
                     decoding="async"
                   />
-                  <figcaption>{item.caption}</figcaption>
+                  <figcaption>
+                    {item.caption}
+                    <span class="photo-credit">
+                      SipsCo &middot;{' '}
+                      <time datetime={item.photoDatetime}>{item.photoDate}</time>
+                    </span>
+                  </figcaption>
                 </figure>
               )}
             </li>
@@ -761,6 +772,17 @@ const stats = [
     margin-top: 0.7rem;
     font-size: 0.85rem;
     color: var(--ink-soft);
+  }
+
+  /* Date credit sits on its own line under both photo captions, set in the
+     same uppercase key as .news-meta so the two dates read as one system. */
+  .photo-credit {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: color-mix(in srgb, var(--ink-soft) 75%, transparent);
   }
 
   /* ---------- footer ---------- */
