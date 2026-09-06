@@ -9,6 +9,8 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  # deploy-pages has required actions:read since v4
+  actions: read
 
 # Allow one deploy at a time; never cancel a run that is mid-publish.
 concurrency:
@@ -20,9 +22,9 @@ jobs:
     name: Build site
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -38,9 +40,12 @@ jobs:
           test -f dist/.nojekyll
           grep -q 'dirt.incantationjunction.com' dist/CNAME
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: ./dist
+          # v4+ excludes dotfiles by default, which would silently drop
+          # .nojekyll from the artifact
+          include-hidden-files: true
 
   deploy:
     name: Publish to GitHub Pages
@@ -51,4 +56,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
