@@ -25,6 +25,47 @@ const services = [
   },
 ];
 
+const news = [
+  {
+    datetime: '2026-09-06',
+    date: 'September 6, 2026',
+    tag: 'Company',
+    title: 'SipsCo to unveil third blending plant in October',
+    body:
+      'The new yard comes online next month, adding a fourth blending line, a ' +
+      'second on-site lab, and enough covered storage to hold winter stock ' +
+      'without tarping it. Tours for wholesale partners open the week after ' +
+      'commissioning.',
+    lead: true,
+    image: '/img/sjin-factory-tour.webp',
+    imageAlt:
+      'A player character labelled Sjin standing on a walkway above the new ' +
+      'plant, orange gantries and a settling pond behind, in heavy rain',
+    caption:
+      'CEO Sjin on site at the new plant, ahead of October commissioning.',
+  },
+  {
+    datetime: '2026-08-18',
+    date: 'August 18, 2026',
+    tag: 'Operations',
+    title: 'Standard lead time drops to 48 hours',
+    body:
+      'Second shift at the main yard cuts the typical order-to-delivery window ' +
+      'from four days to two across all standard blends.',
+    lead: false,
+  },
+  {
+    datetime: '2026-07-02',
+    date: 'July 2, 2026',
+    tag: 'Product',
+    title: 'Coarse Blend No. 7 returns to the catalogue',
+    body:
+      'Back by request from the drainage crowd, with the same particle spec as ' +
+      'the original run and a fresh lab panel on every batch.',
+    lead: false,
+  },
+];
+
 const stats = [
   { figure: '220K', label: 'Cubic yards delivered yearly' },
   { figure: '34', label: 'Standard blends' },
@@ -46,8 +87,9 @@ const stats = [
       <nav aria-label="Primary">
         <ul class="nav">
           <li><a href="#about">About</a></li>
-          <li><a href="#services">What we do</a></li>
-          <li><a href="#numbers">Company</a></li>
+          <li class="nav-wide"><a href="#services">What we do</a></li>
+          <li class="nav-wide"><a href="#numbers">Company</a></li>
+          <li class="nav-wide"><a href="#news">News</a></li>
           <li><a class="nav-cta" href="#contact">Contact</a></li>
         </ul>
       </nav>
@@ -131,7 +173,34 @@ const stats = [
       </div>
     </section>
 
-    <section class="section" id="numbers" aria-labelledby="numbers-h">
+    <section class="section" id="customers" aria-labelledby="customers-h">
+      <div class="wrap customers-inner">
+        <div>
+          <p class="eyebrow">Customers</p>
+          <h2 id="customers-h">Another happy customer.</h2>
+          <p>
+            Our blends move fast. A few of them move on their own. We do not
+            chase these down, and we do not count them against the yard.
+          </p>
+        </div>
+        <figure class="customer-figure">
+          <img
+            src="/img/another-happy-customer.webp"
+            width="817"
+            height="479"
+            alt="A tall black figure carrying a single block of soil across a grass field"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>
+            Unverified customer relocating roughly 0.03 yd&sup3; of Standard
+            Topsoil, unassisted and without a quote.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="numbers" aria-labelledby="numbers-h">
       <div class="wrap">
         <p class="eyebrow">By the numbers</p>
         <h2 id="numbers-h">The company at a glance.</h2>
@@ -143,6 +212,38 @@ const stats = [
             </div>
           ))}
         </dl>
+      </div>
+    </section>
+
+    <section class="section" id="news" aria-labelledby="news-h">
+      <div class="wrap">
+        <p class="eyebrow">Newsroom</p>
+        <h2 id="news-h">Latest from the yard.</h2>
+        <ul class="news-list">
+          {news.map((item) => (
+            <li class={item.lead ? 'news-item news-lead' : 'news-item'}>
+              <div class="news-meta">
+                <time datetime={item.datetime}>{item.date}</time>
+                <span class="news-tag">{item.tag}</span>
+              </div>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+              {item.image && (
+                <figure class="news-figure">
+                  <img
+                    src={item.image}
+                    width="1052"
+                    height="551"
+                    alt={item.imageAlt}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption>{item.caption}</figcaption>
+                </figure>
+              )}
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
 
@@ -193,6 +294,7 @@ const stats = [
           <ul>
             <li><a href="#about">About</a></li>
             <li><a href="#numbers">At a glance</a></li>
+            <li><a href="#news">News</a></li>
             <li><a href="#contact">Contact</a></li>
             <li><a href="mailto:press@dirt.incantationjunction.com">Press</a></li>
           </ul>
@@ -225,7 +327,11 @@ const stats = [
           <p class="motto">Big Money, Big Women, Big Fun&trade;</p>
           <p class="copyright">&copy; {year} SipsCo. All rights reserved.</p>
         </div>
-        <p class="footer-note">Built with Astro. Hosted on GitHub Pages.</p>
+        <p class="footer-note">
+          Built with Astro. Hosted on GitHub Pages. Photography on this site
+          consists of Minecraft screenshots; not affiliated with or endorsed by
+          Mojang Studios.
+        </p>
       </div>
     </div>
   </footer>
@@ -321,10 +427,12 @@ const stats = [
     border-radius: 999px;
   }
 
-  .nav li:nth-child(3) { display: none; }
+  /* Class-based rather than nth-child so adding nav items cannot silently
+     change which one gets hidden on narrow screens. */
+  .nav-wide { display: none; }
 
-  @media (min-width: 620px) {
-    .nav li:nth-child(3) { display: list-item; }
+  @media (min-width: 760px) {
+    .nav-wide { display: list-item; }
   }
 
   /* ---------- hero ---------- */
@@ -524,6 +632,113 @@ const stats = [
     text-decoration: none;
     border-bottom: 1px solid color-mix(in srgb, currentColor 45%, transparent);
     align-self: flex-start;
+  }
+
+  /* ---------- customers ---------- */
+  .customers-inner {
+    display: grid;
+    gap: clamp(1.75rem, 5vw, 3rem);
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+
+  @media (min-width: 860px) {
+    .customers-inner { grid-template-columns: 0.85fr 1.15fr; }
+  }
+
+  .customers-inner > div p { color: var(--ink-soft); max-width: 44ch; }
+
+  .customer-figure { margin: 0; }
+
+  .customer-figure img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .customer-figure figcaption {
+    margin-top: 0.85rem;
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* ---------- news ---------- */
+  .news-list {
+    list-style: none;
+    margin: 2.25rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1.25rem;
+    /* Explicit two-up rather than auto-fit: auto-fit yields four tracks at
+       desktop width, leaving the two secondary items stranded in half a row. */
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 860px) {
+    .news-list { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .news-item {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.6rem;
+  }
+
+  .news-item h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+
+  .news-item p { color: var(--ink-soft); margin: 0; }
+
+  .news-lead {
+    border-color: color-mix(in srgb, var(--brand) 45%, var(--line));
+    border-top: 3px solid var(--brand);
+  }
+
+  @media (min-width: 860px) {
+    .news-lead { grid-column: 1 / -1; }
+    .news-lead h3 { font-size: clamp(1.3rem, 2.6vw, 1.65rem); }
+    .news-lead p { max-width: 68ch; }
+  }
+
+  .news-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.7rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+  }
+
+  .news-tag {
+    background: var(--surface-alt);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    font-weight: 650;
+    color: var(--accent);
+  }
+
+  .news-figure {
+    margin: 1.4rem 0 0;
+  }
+
+  .news-figure img {
+    width: 100%;
+    height: auto;
+    border-radius: calc(var(--radius) - 4px);
+    border: 1px solid var(--line);
+  }
+
+  .news-figure figcaption {
+    margin-top: 0.7rem;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
   }
 
   /* ---------- footer ---------- */

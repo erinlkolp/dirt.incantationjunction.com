@@ -42,6 +42,9 @@ jobs:
           # silently promoted to (R), which would be unlawful unregistered
           grep -q 'Big Money, Big Women, Big Fun&trade;' dist/index.html
           ! grep -q 'Big Fun&reg;' dist/index.html
+          # photography must survive the build; these are referenced by the page
+          test -f dist/img/another-happy-customer.webp
+          test -f dist/img/sjin-factory-tour.webp
 
       # --offline needs --root-dir or every root-relative href fails to resolve.
       - name: Link check
