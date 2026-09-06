@@ -221,7 +221,10 @@ const stats = [
       </div>
 
       <div class="footer-bottom">
-        <p class="copyright">&copy; {year} SipsCo. All rights reserved.</p>
+        <div class="footer-legal">
+          <p class="motto">Big Money, Big Women, Big Fun&trade;</p>
+          <p class="copyright">&copy; {year} SipsCo. All rights reserved.</p>
+        </div>
         <p class="footer-note">Built with Astro. Hosted on GitHub Pages.</p>
       </div>
     </div>
@@ -590,6 +593,20 @@ const stats = [
     align-items: center;
     color: var(--ink-soft);
     font-size: 0.875rem;
+  }
+
+  .footer-legal {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  /* Unregistered mark: TM only. Never swap this for (R) without a USPTO
+     registration — asserting (R) on an unregistered mark is unlawful. */
+  .motto {
+    margin: 0;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    color: var(--ink);
   }
 
   .copyright { margin: 0; }

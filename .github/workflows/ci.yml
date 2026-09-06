@@ -38,6 +38,10 @@ jobs:
           grep -q 'dirt.incantationjunction.com' dist/CNAME
           grep -q 'All rights reserved' dist/index.html
           grep -q "$(date -u +%Y) SipsCo" dist/index.html
+          # the mark must keep its TM; guard against it being dropped or
+          # silently promoted to (R), which would be unlawful unregistered
+          grep -q 'Big Money, Big Women, Big Fun&trade;' dist/index.html
+          ! grep -q 'Big Fun&reg;' dist/index.html
 
       # --offline needs --root-dir or every root-relative href fails to resolve.
       - name: Link check
