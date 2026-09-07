@@ -206,7 +206,9 @@ Mined 558 block(s). Fuel left: 402`;
      rather than following the light/dark tokens -- this is what the unit
      actually writes to the terminal, and a terminal is not off-white. */
   .console {
-    margin: 2.5rem 0 0;
+    /* Narrower than the wrap, so it needs the auto margins to sit centred
+       rather than hanging off the left edge of the section. */
+    margin: 2.5rem auto 0;
     max-width: 46rem;
   }
 
