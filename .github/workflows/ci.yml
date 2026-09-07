@@ -16,15 +16,30 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # The field report's numbers, test names and code listing are claims
+      # about another repository, and nothing here can notice when it moves.
+      # Tracks its default branch deliberately: a constant changed over there
+      # turns this build red, which is the point. CI only -- Deploy does not
+      # run this, so drift never blocks publishing the site.
+      - name: Check out the scripts the field report describes
+        uses: actions/checkout@v7
+        with:
+          repository: erinlkolp/computercraft-scripts
+          path: .external/computercraft-scripts
+          persist-credentials: false
+
       - uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version-file: '.nvmrc'
           cache: npm
 
       - run: npm ci
 
       - name: Astro check (types and templates)
         run: npm run check
+
+      - name: Field report still matches the real source
+        run: npm run check:drift -- .external/computercraft-scripts
 
       - name: Build
         run: npm run build

@@ -7,9 +7,13 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "check:drift": "node tools/check-source-drift.mjs"
   },
   "description": "One-page corporate site for SipsCo",
+  "engines": {
+    "node": ">=24"
+  },
   "dependencies": {
     "astro": "^7.3.1"
   },
