@@ -49,16 +49,112 @@ const specs = [
   },
 ];
 
-// Verbatim test names from test/flattener_test.lua.
-const testNames = [
-  'never aims a dig below the start layer',
-  'leaves blocks outside the 15x15 alone',
-  'does not mine the chest',
-  'never scatters items on the ground',
-  'halts instead of spinning when the chest fills up',
-  'comes home to the start cell facing the way it started',
-  'mines nothing on ground that is already flat',
+// Document furniture. The revision letter tracks this page's own history:
+// Rev. A was the report alone, Rev. B added Appendix A.
+const DOC_ID = 'SIPSCO-RND-FR-007';
+const DOC_REV = 'Rev. B';
+const DOC_ISSUED = 'September 2026';
+
+// Every test name in both harnesses, verbatim and in source order. Section 7
+// claims these ARE the guarantees, so they must stay literal -- copy them
+// from the source, never paraphrase, and never print a subset without
+// saying so.
+const suites = [
+  {
+    id: 'suite-flattener',
+    label: 'Extraction unit',
+    source: 'test/flattener_test.lua',
+    names: [
+      'clears every block at and above the start layer inside the 15x15',
+      'leaves the layer it started on intact',
+      'never aims a dig below the start layer',
+      'leaves blocks outside the 15x15 alone',
+      'does not mine the chest',
+      'clears an overhang floating above empty air',
+      'delivers the dirt and the stone to the chest',
+      'never scatters items on the ground',
+      'comes home to the start cell facing the way it started',
+      'empties into the chest partway through a big job',
+      'halts instead of spinning when the chest fills up',
+      'holds its haul rather than scattering it when no chest is there',
+      'mines nothing on ground that is already flat',
+    ],
+  },
+  {
+    id: 'suite-sweeper',
+    label: 'Collection unit',
+    source: 'test/sweeper_test.lua',
+    names: [
+      'picks up every loose stack inside the 10x10',
+      'delivers the haul to the chest',
+      'leaves litter outside the 10x10 alone',
+      'never scatters items on the ground',
+      'never digs anything',
+      'empties into the chest partway through and resumes the pass',
+      'halts instead of spinning when the chest fills up',
+      'holds its haul rather than scattering it when no chest is there',
+      'keeps its fuel instead of posting it into the chest',
+      'comes home to the start cell facing the way it started',
+      'warns and keeps sweeping when there is no headroom',
+      'finishes a pass on a yard with nothing lying about',
+    ],
+  },
 ];
+
+// Counted rather than written out, so the prose cannot drift from the list.
+const testCount = suites.reduce((n, s) => n + s.names.length, 0);
+
+// Verbatim from turtles/flattener.lua -- the stop condition section 3 spends
+// three paragraphs describing. Dedented from its position inside the layer
+// loop; otherwise untouched, comment included.
+// Figure 1 is generated from the same loop as buildPath() in flattener.lua --
+// column-major, every odd column walked backwards -- so the drawing cannot
+// quietly disagree with the algorithm it illustrates.
+const GRID = 15;
+const CELL = 13;
+const SPAN = GRID * CELL;
+
+function serpentine() {
+  const cells: number[][] = [];
+  for (let c = 0; c < GRID; c += 1) {
+    if (c % 2 === 0) {
+      for (let r = 0; r < GRID; r += 1) cells.push([c, r]);
+    } else {
+      for (let r = GRID - 1; r >= 0; r -= 1) cells.push([c, r]);
+    }
+  }
+  return cells;
+}
+
+const layerEven = serpentine();
+const layerOdd = [...layerEven].reverse();
+const mid = (n: number) => n * CELL + CELL / 2;
+const points = (cells: number[][]) =>
+  cells.map(([c, r]) => `${mid(c)},${mid(r)}`).join(' ');
+const ticks = Array.from({ length: GRID + 1 }, (_, i) => i * CELL);
+
+// Figure 2 is a side elevation: nine cells across, seven layers up, layer +0
+// at the bottom. The two worlds are the two cases section 3 argues about.
+const ECOLS = 9;
+const EROWS = 7;
+const ECELL = 16;
+const EW = ECOLS * ECELL;
+const EH = EROWS * ECELL;
+const layerY = (e: number) => (EROWS - 1 - e) * ECELL;
+
+const treeBlocks = [
+  ...[0, 1, 2, 3].map((e) => [4, e]),
+  ...[2, 3, 4, 5, 6].map((c) => [c, 4]),
+  ...[3, 4, 5].map((c) => [c, 5]),
+];
+const debrisBlocks = [3, 4, 5].map((c) => [c, 5]);
+
+const stopCondition = `-- Stop once this layer came up empty AND nothing was spotted overhead,
+-- but never before SCAN_MIN layers have actually been walked.
+if z + 1 >= SCAN_MIN and layerDigs == 0 and not sawAbove then
+  print("Nothing left up here. Done.")
+  break
+end`;
 ---
 
 <Base
@@ -73,6 +169,13 @@ const testNames = [
         <p class="eyebrow">Field report &middot; Research &amp; Development</p>
         <h1>Unit 7</h1>
         <p class="paper-sub">Autonomous Extraction at the Face</p>
+        <dl class="doc-meta">
+          <div><dt>Document</dt><dd>{DOC_ID}</dd></div>
+          <div><dt>Revision</dt><dd>{DOC_REV}</dd></div>
+          <div><dt>Issued</dt><dd>{DOC_ISSUED}</dd></div>
+          <div><dt>Prepared by</dt><dd>Research &amp; Development</dd></div>
+          <div><dt>Approved</dt><dd>Yard Operations</dd></div>
+        </dl>
       </header>
 
       <section aria-labelledby="s1">
@@ -110,6 +213,68 @@ const testNames = [
           the next layer where it finished the last rather than trekking back
           to the corner.
         </p>
+
+        <figure class="fig">
+          <svg
+            class="fig-svg"
+            viewBox={`0 0 ${SPAN * 2 + 46} ${SPAN + 22}`}
+            role="img"
+            aria-labelledby="fig1-t fig1-d"
+          >
+            <title id="fig1-t">
+              One layer's serpentine route, and the layer above it running the
+              same route in reverse
+            </title>
+            <desc id="fig1-d">
+              Two fifteen-by-fifteen grids side by side. In the first, the
+              route runs down the first column, up the second, and so on,
+              starting at the near corner and finishing at the far one. In the
+              second, the identical route is walked backwards, so it starts at
+              the corner where the layer below finished.
+            </desc>
+
+            <g class="fig-panel">
+              <text class="fig-label" x="0" y="11">Layer +0</text>
+              <g transform={`translate(0, 22)`}>
+                <g class="fig-grid">
+                  {ticks.map((t) => (
+                    <>
+                      <line x1={t} y1="0" x2={t} y2={SPAN} />
+                      <line x1="0" y1={t} x2={SPAN} y2={t} />
+                    </>
+                  ))}
+                </g>
+                <polyline class="fig-path" points={points(layerEven)} />
+                <circle class="fig-start" cx={mid(0)} cy={mid(0)} r="3.6" />
+                <circle class="fig-end" cx={mid(14)} cy={mid(14)} r="3.6" />
+              </g>
+            </g>
+
+            <g class="fig-panel" transform={`translate(${SPAN + 46}, 0)`}>
+              <text class="fig-label" x="0" y="11">Layer +1 &#8212; reversed</text>
+              <g transform={`translate(0, 22)`}>
+                <g class="fig-grid">
+                  {ticks.map((t) => (
+                    <>
+                      <line x1={t} y1="0" x2={t} y2={SPAN} />
+                      <line x1="0" y1={t} x2={SPAN} y2={t} />
+                    </>
+                  ))}
+                </g>
+                <polyline class="fig-path" points={points(layerOdd)} />
+                <circle class="fig-start" cx={mid(14)} cy={mid(14)} r="3.6" />
+                <circle class="fig-end" cx={mid(0)} cy={mid(0)} r="3.6" />
+              </g>
+            </g>
+          </svg>
+          <figcaption>
+            <b>Figure 1.</b> The route through a single layer. Filled dot is
+            where the unit starts, open ring where it finishes. Because the
+            odd layer walks the same route backwards, the unit begins each
+            layer in the corner where it ended the one below &mdash; it never
+            returns to a fixed origin between layers.
+          </figcaption>
+        </figure>
       </section>
 
       <section aria-labelledby="s3">
@@ -128,6 +293,98 @@ const testNames = [
           keeps the unit climbing even when the leaf layers sit over open
           air.
         </p>
+
+        <figure class="fig">
+          <svg
+            class="fig-svg"
+            viewBox={`0 0 ${EW * 2 + 118} ${EH + 22}`}
+            role="img"
+            aria-labelledby="fig2-t fig2-d"
+          >
+            <title id="fig2-t">
+              Where one block of lookahead carries the unit up, and where it
+              does not
+            </title>
+            <desc id="fig2-d">
+              Two side elevations, nine cells wide and seven layers tall. In
+              the first, a tree trunk occupies every layer from the floor to
+              the canopy, so the unit finds something overhead at each step
+              and keeps climbing. In the second, debris sits five layers up
+              with nothing beneath it; the unit sweeps the first four layers
+              regardless, finds the fifth empty with nothing above it, and
+              stops below the debris.
+            </desc>
+
+            <g class="fig-panel">
+              <text class="fig-label" x="0" y="11">Connected</text>
+              <g transform={`translate(20, 22)`}>
+                <g class="fig-grid">
+                  {Array.from({ length: ECOLS + 1 }, (_, i) => (
+                    <line x1={i * ECELL} y1="0" x2={i * ECELL} y2={EH} />
+                  ))}
+                  {Array.from({ length: EROWS + 1 }, (_, i) => (
+                    <line x1="0" y1={i * ECELL} x2={EW} y2={i * ECELL} />
+                  ))}
+                </g>
+                {treeBlocks.map(([c, e]) => (
+                  <rect class="fig-block" x={c * ECELL} y={layerY(e)} width={ECELL} height={ECELL} />
+                ))}
+                <path
+                  class="fig-climb"
+                  d={`M ${EW + 8} ${layerY(0) + ECELL - 2} V ${layerY(5) + 4}`}
+                  marker-end="url(#fig-arrow)"
+                />
+              </g>
+              <text class="fig-tick" x="14" y={22 + layerY(5) + 11}>+5</text>
+              <text class="fig-tick" x="14" y={22 + layerY(0) + 11}>+0</text>
+            </g>
+
+            <g class="fig-panel" transform={`translate(${EW + 82}, 0)`}>
+              <text class="fig-label" x="0" y="11">Detached</text>
+              <g transform={`translate(20, 22)`}>
+                <rect class="fig-band" x="0" y={layerY(3)} width={EW} height={ECELL * 4} />
+                <g class="fig-grid">
+                  {Array.from({ length: ECOLS + 1 }, (_, i) => (
+                    <line x1={i * ECELL} y1="0" x2={i * ECELL} y2={EH} />
+                  ))}
+                  {Array.from({ length: EROWS + 1 }, (_, i) => (
+                    <line x1="0" y1={i * ECELL} x2={EW} y2={i * ECELL} />
+                  ))}
+                </g>
+                {debrisBlocks.map(([c, e]) => (
+                  <rect class="fig-block" x={c * ECELL} y={layerY(e)} width={ECELL} height={ECELL} />
+                ))}
+                <path
+                  class="fig-climb"
+                  d={`M ${EW + 8} ${layerY(0) + ECELL - 2} V ${layerY(3) + 4}`}
+                  marker-end="url(#fig-arrow)"
+                />
+                <g class="fig-stop" transform={`translate(${4 * ECELL + ECELL / 2}, ${layerY(4) + ECELL / 2})`}>
+                  <line x1="-4.5" y1="-4.5" x2="4.5" y2="4.5" />
+                  <line x1="4.5" y1="-4.5" x2="-4.5" y2="4.5" />
+                </g>
+              </g>
+              <text class="fig-tick" x="14" y={22 + layerY(5) + 11}>+5</text>
+              <text class="fig-tick" x="14" y={22 + layerY(0) + 11}>+0</text>
+            </g>
+
+            <defs>
+              <marker id="fig-arrow" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                <path class="fig-arrowhead" d="M 0 1 L 6 4 L 0 7 z" />
+              </marker>
+            </defs>
+          </svg>
+          <figcaption>
+            <b>Figure 2.</b> Left: the trunk occupies every layer, so the unit
+            finds a block overhead at each step and keeps going. Right: the
+            same debris five layers up with nothing beneath it. The shaded
+            band is the four layers swept unconditionally; above it the unit
+            finds an empty layer with nothing overhead and stops. The gap
+            defeats the lookahead. This is a stated limit of the method, not a
+            fault in it.
+          </figcaption>
+        </figure>
+
         <p>
           That lookahead reaches one block. Debris floating with a wider gap
           beneath it would be missed, so the first four layers are swept
@@ -136,6 +393,17 @@ const testNames = [
           bounds the job in the event that something above the pad is taller
           than anyone expected.
         </p>
+
+        <figure class="listing">
+          <pre><code>{stopCondition}</code></pre>
+          <figcaption>
+            <b>Listing 1.</b> The stop condition, verbatim
+            from <code>turtles/flattener.lua</code>. <code>sawAbove</code> is
+            the free lookahead; <code>SCAN_MIN</code> is the four-layer floor
+            beneath it. Both conditions must hold, and neither is reachable
+            from an operator setting.
+          </figcaption>
+        </figure>
       </section>
 
       <section aria-labelledby="s4">
@@ -223,12 +491,21 @@ const testNames = [
         <p>
           Both units are exercised against a stubbed voxel world that
           implements the movement and inspection interface without requiring a
-          live site. Thirteen cases run against it, and their names are the
-          guarantees restated:
+          live site. The two harnesses hold {testCount} cases between them.
+          Their names are the guarantees restated, and they are reproduced
+          here in full.
         </p>
-        <ul class="test-names">
-          {testNames.map((n) => <li>{n}</li>)}
-        </ul>
+        <div class="suites">
+          {suites.map((s) => (
+            <div class="suite">
+              <h3 id={s.id}>{s.label}</h3>
+              <ol class="test-names" aria-labelledby={s.id}>
+                {s.names.map((n) => <li>{n}</li>)}
+              </ol>
+              <p class="spec-source">{s.source}</p>
+            </div>
+          ))}
+        </div>
         <p>
           We would rather find out on a workbench than on the north face.
         </p>
@@ -354,14 +631,159 @@ const testNames = [
 
   .paper strong { font-weight: 650; }
 
-  .test-names {
+  /* Document control block. Set as a form rather than as prose -- mono values
+     under uppercase labels -- because that is what it is. */
+  .doc-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: 0.6rem 1.25rem;
+    margin: 1.4rem 0 0;
+    font-size: 0.7rem;
+  }
+
+  .doc-meta dt {
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+
+  .doc-meta dd {
+    margin: 0.15rem 0 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  /* ---------- figures ----------
+     Every colour below is a token, and the global print block in Base.astro
+     redefines those tokens to black on white. That is the whole print story
+     for the figures: no per-figure colour overrides are needed here. */
+  .fig {
+    margin: 1.6rem 0;
+  }
+
+  .fig-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    padding: 0.9rem;
+  }
+
+  .fig figcaption,
+  .listing figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
+  .fig-grid line {
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+
+  .fig-path {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .fig-start { fill: var(--brand); }
+
+  .fig-end {
+    fill: var(--surface);
+    stroke: var(--brand);
+    stroke-width: 1.4;
+  }
+
+  .fig-block { fill: color-mix(in srgb, var(--ink) 70%, transparent); }
+
+  .fig-band { fill: color-mix(in srgb, var(--accent) 18%, transparent); }
+
+  .fig-climb {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 1.6;
+    stroke-dasharray: 3 3;
+  }
+
+  .fig-arrowhead { fill: var(--brand); }
+
+  .fig-stop line {
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  .fig-label {
+    font-size: 8.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    fill: var(--ink-soft);
+  }
+
+  .fig-tick {
+    font-size: 8px;
+    text-anchor: end;
+    fill: var(--ink-soft);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  /* ---------- code listing ---------- */
+  .listing { margin: 1.6rem 0; }
+
+  .listing pre {
+    margin: 0;
+    padding: 0.8rem 0.9rem;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface-alt);
+  }
+
+  /* The inline `code` rule below sets an accent colour and nowrap, which is
+     right for an identifier mid-sentence and wrong for a block of source. */
+  .listing pre code {
+    color: var(--ink);
+    white-space: pre;
+    font-size: 0.78rem;
+    line-height: 1.55;
+  }
+
+  /* Twenty-five names is a list to be checked against, not read as prose, so
+     each harness gets its own numbered block under its own filename. */
+  .suites {
+    display: grid;
+    gap: 1.4rem;
     margin: 0 0 0.9rem;
-    padding-left: 1.1rem;
+  }
+
+  .suite h3 {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    margin-bottom: 0.5rem;
+  }
+
+  .test-names {
+    margin: 0;
+    padding-left: 1.6rem;
     color: var(--ink-soft);
     font-style: italic;
   }
 
-  .test-names li { margin-bottom: 0.3rem; }
+  .test-names li {
+    margin-bottom: 0.3rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .suite .spec-source { margin-top: 0.55rem; }
 
   .paper-cta { margin-top: 1.25rem; }
 
@@ -455,9 +877,14 @@ const testNames = [
 
   .paper-foot p { margin: 0; }
 
-  /* Two pages on paper, which is the whole conceit. Drop the site chrome,
-     print on white, and spell out the one external URL since a printed link
-     is otherwise a dead end. */
+  /* It sets as a report on paper, which is the whole conceit -- the running
+     text, then the appendix on its own sheet. Drop the site chrome, print on
+     white, and spell out the one external URL since a printed link is
+     otherwise a dead end.
+
+     Figures and the listing take their colours from the tokens, and the
+     global print block in Base.astro already redefines those to black on
+     white, so everything below is sizing and pagination only. */
   @media print {
     .paper-main { padding: 0; }
 
@@ -478,9 +905,57 @@ const testNames = [
     .paper h2 { font-size: 10.6pt; margin-bottom: 0.3rem; }
     .paper p { margin-bottom: 0.42rem; }
     .paper-lead { font-size: 10pt; }
-    .test-names { margin-bottom: 0.42rem; }
-    .test-names li { margin-bottom: 0.1rem; }
     .paper-cta { margin-top: 0.6rem; }
+
+    .doc-meta {
+      gap: 0.3rem 1rem;
+      margin-top: 0.6rem;
+      font-size: 7pt;
+    }
+
+    /* A figure split across a page break is worse than a short page. */
+    .fig, .listing {
+      break-inside: avoid;
+      margin: 0.7rem 0;
+    }
+
+    /* Full width is more figure than these need on a 6.5in measure. */
+    .fig-svg {
+      width: 84%;
+      padding: 0.4rem;
+      border-color: #999;
+    }
+
+    /* --line prints at #999, which competes with the route and the blocks.
+       The lattice is scaffolding; it should sit behind them. */
+    .fig-grid line { stroke: #c9c9c9; }
+
+    .fig figcaption,
+    .listing figcaption {
+      margin-top: 0.3rem;
+      font-size: 8pt;
+      line-height: 1.4;
+    }
+
+    .listing pre {
+      padding: 0.4rem 0.5rem;
+      border-color: #999;
+      background: none;
+    }
+
+    .listing pre code { font-size: 8pt; line-height: 1.45; }
+
+    /* Twenty-five items down a single column wastes most of a sheet. */
+    .suites {
+      grid-template-columns: 1fr 1fr;
+      gap: 0.9rem;
+      margin-bottom: 0.42rem;
+      break-inside: avoid;
+    }
+
+    .suite h3 { font-size: 8.5pt; margin-bottom: 0.25rem; }
+    .test-names { padding-left: 1.4rem; }
+    .test-names li { margin-bottom: 0.08rem; }
 
     /* Never strand a heading at the foot of a page. Sections deliberately do
        NOT get break-inside: avoid — section 4 is long enough that refusing to
