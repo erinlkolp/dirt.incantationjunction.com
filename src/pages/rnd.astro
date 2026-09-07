@@ -3,7 +3,11 @@ import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-// NOTE: As with the homepage, all copy here is placeholder/demo content.
+// Two of these three programmes describe real published programs and are
+// held to that by tools/check-source-drift.mjs by way of the field report;
+// Blend Formulation is openly invented. Do not add technical detail to the
+// first two that is not true of the Lua.
+//
 // The block icons reuse the three variants the homepage services cards do
 // not: grass, coarse, and sand.
 const programmes = [
@@ -12,16 +16,18 @@ const programmes = [
     title: 'Autonomous Extraction',
     body:
       'A small fleet of programmable extraction units works the north face ' +
-      'unattended, cutting to a depth our crews would need shoring for. Each ' +
-      'unit returns to the pad on its own, and most of them return with dirt.',
+      'unattended, levelling each pad to the elevation it was set down at and ' +
+      'never cutting below it. Each unit returns to the pad on its own, and ' +
+      'most of them return with dirt.',
   },
   {
     icon: '/img/coarse-block.svg',
-    title: 'Substrate Telemetry',
+    title: 'Material Recovery',
     body:
-      'Sensor packs seeded through a delivered load report moisture, ' +
-      'temperature, and pH back to the yard for the life of the substrate. ' +
-      'Growers receive a monthly summary. The soil files continuously.',
+      'A second unit walks the yard on the hour, lifting whatever the ' +
+      'extraction fleet left lying about. It cruises one block above the ' +
+      'litter rather than through it, and it does not dig \u2014 the only ' +
+      'thing it is permitted to remove is what is already loose.',
   },
   {
     icon: '/img/sand-block.svg',
