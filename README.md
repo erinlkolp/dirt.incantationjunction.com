@@ -9,11 +9,15 @@ Actions, and served at <https://dirt.incantationjunction.com>.
 
 ```sh
 npm install
-npm run dev      # local dev server
-npm run check    # astro check (types + templates)
-npm run build    # static build into dist/
-npm run preview  # serve the built output
+npm run dev         # local dev server
+npm run check       # astro check (types + templates)
+npm run check:drift # field report vs the real Lua (see below)
+npm run build       # static build into dist/
+npm run preview     # serve the built output
 ```
+
+The Node version lives in `.nvmrc` and both workflows read it from there, so
+there is one number to change rather than three.
 
 ## Content
 
@@ -25,6 +29,42 @@ All page copy is placeholder/demo content. The parts most likely to change:
 | Stat figures | `stats` array in `src/pages/index.astro` |
 | Section prose, footer, contact | markup in `src/pages/index.astro` |
 | Title, description, favicon, colour tokens | `src/layouts/Base.astro` |
+| Unit 7 appendix, test names, code listing | `src/data/unit-7.js` |
+
+The R&D page's first two programme cards describe real published programs and
+must stay true of them; Blend Formulation is openly invented.
+
+## The Unit 7 field report
+
+`/rnd/unit-7/` is a document rather than a marketing page. The company around
+it is fictional and the engineering is not: every figure in Appendix A is a
+real constant, every name in section 7 is a real test, and Listing 1 is real
+source — all of it from
+[erinlkolp/computercraft-scripts](https://github.com/erinlkolp/computercraft-scripts).
+
+Nothing in this repository can notice when that one moves, so
+`tools/check-source-drift.mjs` reads the Lua and compares it against
+`src/data/unit-7.js`, the same module the page renders from. It checks 19
+claims: the appendix constants (digit-boundary matched, so `3` cannot satisfy
+a row that says `32`), the accepted-fuel list as a set in both directions, all
+25 test names verbatim and in source order, and the six lines of Listing 1.
+
+```sh
+npm run check:drift                          # expects ../computercraft-scripts
+npm run check:drift -- /path/to/the/scripts  # or say where it is
+```
+
+Exit codes are `0` clean, `1` drift, `2` could not find the scripts.
+
+CI runs it against that repository's **default branch**, on purpose: changing a
+constant over there turns this build red without anyone touching this
+repository. That is the intended coupling — the report claims to be true, so
+the build should fail when it stops being. It runs in `ci.yml` only, never in
+`deploy.yml`, so drift never blocks publishing the site.
+
+Figure 1 on that page is generated from the same loop shape as `buildPath()`
+in `flattener.lua` rather than drawn by hand, so the drawing cannot disagree
+with the algorithm it illustrates.
 
 The footer copyright year is rendered at build time, so it updates whenever
 the site is rebuilt.

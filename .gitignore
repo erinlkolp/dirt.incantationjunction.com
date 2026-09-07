@@ -19,3 +19,6 @@ pnpm-debug.log*
 .DS_Store
 .vscode/
 .idea/
+
+# CI checks the field report against a checkout of the scripts repo
+.external/
