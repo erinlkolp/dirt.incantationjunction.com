@@ -32,6 +32,34 @@ const programmes = [
       'roughly nine hundred candidates. Blend No. 0 remains sealed.',
   },
 ];
+
+// A shift off the north face console. Every line here is a format string that
+// really exists in turtles/flattener.lua -- including the layer summaries,
+// which carry no "block(s)" suffix, unlike the total on the last line. The
+// run itself is one shift's figures: the layer totals sum to the final count,
+// and the unit cannot report "Nothing left up here" before layer +3, because
+// SCAN_MIN holds it to four unconditional layers. Refuelling prints nothing,
+// which is why the closing fuel figure is not the opening one minus travel.
+const shiftLog = `=== Turtle Flattener ===
+Area: 15 x 15  (225 cells)
+Levelling to my current elevation. Nothing below it is touched.
+Fuel: 1284
+Chest expected directly behind. Ctrl+T to stop.
+
+Layer +0: mined 203
+  Inventory full - returning to chest
+  Dumped 16 stack(s)
+Layer +1: mined 178
+  ~ Skipped cell 11,4 (blocked)
+Layer +2: mined 121, 1 cell(s) unreachable
+  Inventory full - returning to chest
+  Dumped 14 stack(s)
+Layer +3: mined 44
+Layer +4: mined 12
+Layer +5: mined 0
+Nothing left up here. Done.
+
+Mined 558 block(s). Fuel left: 402`;
 ---
 
 <Base
@@ -104,6 +132,17 @@ const programmes = [
           </figcaption>
         </figure>
       </div>
+
+      <div class="wrap">
+        <figure class="console">
+          <figcaption>
+            North face &middot; shift of <time datetime="2026-09-04"
+              >4 September 2026</time
+            > &middot; <code>flattener.lua</code>
+          </figcaption>
+          <pre><code>{shiftLog}</code></pre>
+        </figure>
+      </div>
     </section>
 
     <section class="section" aria-labelledby="programmes-h">
@@ -162,4 +201,55 @@ const programmes = [
   }
 
   .rnd-closing .cta-row { margin-top: 1.5rem; }
+
+  /* The console is a console in both themes, so it keeps its own colours
+     rather than following the light/dark tokens -- this is what the unit
+     actually writes to the terminal, and a terminal is not off-white. */
+  .console {
+    margin: 2.5rem 0 0;
+    max-width: 46rem;
+  }
+
+  .console figcaption {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+    margin-bottom: 0.6rem;
+  }
+
+  .console figcaption code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--accent);
+  }
+
+  .console pre {
+    margin: 0;
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    border-radius: 10px;
+    background: #0e1211;
+    border: 1px solid #2a3432;
+  }
+
+  .console pre code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    color: #dfe6e3;
+    white-space: pre;
+  }
+
+  /* Base.astro forces the page to black on white for print; a dark panel
+     would come through as a solid block, so it inverts here too. */
+  @media print {
+    .console pre {
+      background: none;
+      border-color: #999;
+    }
+
+    .console pre code { color: #000; }
+  }
 </style>
