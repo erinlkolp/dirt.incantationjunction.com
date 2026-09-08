@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { news, HOMEPAGE_NEWS_COUNT } from '../data/news.js';
 
 // NOTE: All copy below is placeholder/demo content for SipsCo (premium dirt).
 // Replace the strings in `services`, `stats`, and the section prose with real
@@ -25,48 +26,10 @@ const services = [
   },
 ];
 
-const news = [
-  {
-    datetime: '2026-09-06',
-    date: 'September 6, 2026',
-    tag: 'Company',
-    title: 'SipsCo to unveil third blending plant in October',
-    body:
-      'The new yard comes online next month, adding a fourth blending line, a ' +
-      'second on-site lab, and enough covered storage to hold winter stock ' +
-      'without tarping it. Tours for wholesale partners open the week after ' +
-      'commissioning.',
-    lead: true,
-    image: '/img/sjin-factory-tour.webp',
-    imageAlt:
-      'A player character labelled Sjin standing on a walkway above the new ' +
-      'plant, orange gantries and a settling pond behind, in heavy rain',
-    caption:
-      'CEO Sjin on site at the new plant, ahead of October commissioning.',
-    photoDatetime: '2026-09-02',
-    photoDate: 'September 2, 2026',
-  },
-  {
-    datetime: '2026-08-18',
-    date: 'August 18, 2026',
-    tag: 'Operations',
-    title: 'Standard lead time drops to 48 hours',
-    body:
-      'Second shift at the main yard cuts the typical order-to-delivery window ' +
-      'from four days to two across all standard blends.',
-    lead: false,
-  },
-  {
-    datetime: '2026-07-02',
-    date: 'July 2, 2026',
-    tag: 'Product',
-    title: 'Coarse Blend No. 7 returns to the catalogue',
-    body:
-      'Back by request from the drainage crowd, with the same particle spec as ' +
-      'the original run and a fresh lab panel on every batch.',
-    lead: false,
-  },
-];
+// The newsroom on this page is a teaser: the newest few, with the newest one
+// as the lead. /news/ carries the whole log, linked at the foot of the
+// section.
+const latestNews = news.slice(0, HOMEPAGE_NEWS_COUNT);
 
 const stats = [
   { figure: '220K', label: 'Cubic yards delivered yearly' },
@@ -209,20 +172,20 @@ const stats = [
         <p class="eyebrow">Newsroom</p>
         <h2 id="news-h">Latest from the yard.</h2>
         <ul class="news-list">
-          {news.map((item) => (
-            <li class={item.lead ? 'news-item news-lead' : 'news-item'}>
+          {latestNews.map((item, i) => (
+            <li class={i === 0 ? 'news-item news-lead' : 'news-item'}>
               <div class="news-meta">
                 <time datetime={item.datetime}>{item.date}</time>
                 <span class="news-tag">{item.tag}</span>
               </div>
               <h3>{item.title}</h3>
               <p>{item.body}</p>
-              {item.image && (
+              {i === 0 && item.image && (
                 <figure class="photo-figure news-figure">
                   <img
                     src={item.image}
-                    width="1052"
-                    height="551"
+                    width={item.imageWidth}
+                    height={item.imageHeight}
                     alt={item.imageAlt}
                     loading="lazy"
                     decoding="async"
@@ -239,6 +202,9 @@ const stats = [
             </li>
           ))}
         </ul>
+        <p class="news-more">
+          <a class="text-link" href="/news/">All news and notes</a>
+        </p>
       </div>
     </section>
 
@@ -501,6 +467,10 @@ const stats = [
     font-weight: 650;
     color: var(--accent);
   }
+
+  /* Sits under the grid rather than inside it, so it does not become a
+     fourth track on wide screens. */
+  .news-more { margin: 1.5rem 0 0; }
 
   .news-figure { margin: 1.4rem 0 0; }
 

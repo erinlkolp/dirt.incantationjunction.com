@@ -1,6 +1,8 @@
 # dirt.incantationjunction.com
 
-One-page corporate site for **SipsCo** — premium dirt, engineered to grow.
+Corporate site for **SipsCo** — premium dirt, engineered to grow. A marketing
+homepage, a news log at `/news/`, and an R&D section whose field report on
+Unit 7 is checked against real source on every CI run.
 
 Built with [Astro](https://astro.build), deployed to GitHub Pages via GitHub
 Actions, and served at <https://dirt.incantationjunction.com>.
@@ -27,12 +29,32 @@ All page copy is placeholder/demo content. The parts most likely to change:
 | --- | --- |
 | Services cards | `services` array in `src/pages/index.astro` |
 | Stat figures | `stats` array in `src/pages/index.astro` |
+| News items | `news` array in `src/data/news.js` |
 | Section prose, footer, contact | markup in `src/pages/index.astro` |
 | Title, description, favicon, colour tokens | `src/layouts/Base.astro` |
 | Unit 7 appendix, test names, code listing | `src/data/unit-7.js` |
 
 The R&D page's first two programme cards describe real published programs and
 must stay true of them; Blend Formulation is openly invented.
+
+## The newsroom
+
+News lives in `src/data/news.js`, newest entry first, and two pages render the
+same array: the homepage shows `HOMEPAGE_NEWS_COUNT` of them as a teaser and
+`/news/` shows all of them with no pagination, so the log can grow without the
+homepage changing shape.
+
+Nothing in the data says which entry is the lead. The homepage takes the first
+one, which means adding a newer entry at the top of the array promotes it --
+full width, photo beside the copy -- and demotes the previous lead, with no
+flag to remember to move. The homepage shows a photo on the lead entry only;
+`/news/` shows every photo it finds, so a photo does not disappear from the
+site when its entry ages out of the teaser.
+
+An entry with a photo carries its own `imageWidth` and `imageHeight`. Those
+are per-entry rather than fixed in the template because the screenshots are
+not all the same shape, and one hard-coded pair in the markup would hand the
+browser the wrong aspect ratio for every photo but one.
 
 ## The Unit 7 field report
 

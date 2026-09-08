@@ -61,10 +61,17 @@ jobs:
           test -f dist/img/another-happy-customer.webp
           test -f dist/img/sjin-factory-tour.webp
           test -f dist/img/mining-turtle.webp
-          # the R&D page is a second route, so a build that silently drops it
-          # would still pass every assertion above
+          test -f dist/img/rnd-facility.webp
+          # every page past the homepage is its own route, so a build that
+          # silently drops one would still pass every assertion above
           test -f dist/rnd/index.html
           test -f dist/rnd/unit-7/index.html
+          test -f dist/news/index.html
+          # the newsroom is split: the homepage teaser must link to the
+          # archive, and the archive must carry entries the teaser does not
+          grep -q 'href="/news/"' dist/index.html
+          grep -q 'Coarse Blend No. 7' dist/news/index.html
+          ! grep -q 'Coarse Blend No. 7' dist/index.html
 
       # --offline needs --root-dir or every root-relative href fails to resolve.
       - name: Link check

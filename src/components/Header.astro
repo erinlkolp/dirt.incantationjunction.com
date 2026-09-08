@@ -1,7 +1,9 @@
 ---
-// Site header. Nav destinations are root-relative ("/#news") rather than bare
-// fragments ("#news"): those sections live on the homepage only, so on any
-// other page a bare fragment would resolve to nothing and silently do nothing.
+// Site header. Destinations that are homepage sections are root-relative
+// ("/#about") rather than bare fragments ("#about"): those sections live on
+// the homepage only, so on any other page a bare fragment would resolve to
+// nothing and silently do nothing. News and R&D are their own pages and link
+// straight to the route.
 ---
 
 <header class="site-header">
@@ -15,7 +17,7 @@
         <li><a href="/#about">About</a></li>
         <li class="nav-wide"><a href="/#services">What we do</a></li>
         <li class="nav-wide"><a href="/#numbers">Company</a></li>
-        <li class="nav-wide"><a href="/#news">News</a></li>
+        <li class="nav-wide"><a href="/news/">News</a></li>
         <li class="nav-wide"><a href="/rnd/">R&amp;D</a></li>
         <li><a class="nav-cta" href="/#contact">Contact</a></li>
       </ul>

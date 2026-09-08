@@ -1,0 +1,198 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { news } from '../data/news.js';
+
+// The whole log, oldest entries included. The homepage newsroom is a teaser
+// that slices the same array; this page deliberately does not slice it and
+// has no pagination, so it just gets longer as entries are added.
+//
+// Every photo in the data is shown here, including the ones the homepage
+// drops once their entry falls out of the lead slot.
+---
+
+<Base
+  title="News and notes — SipsCo"
+  description="Every SipsCo announcement, operations note, and product update, newest first: the running log from the yard."
+>
+  <Header />
+
+  <main id="main">
+    <section class="section page-head" id="top">
+      <div class="wrap">
+        <p class="eyebrow">Newsroom</p>
+        <h1>Everything from the yard.</h1>
+        <p class="page-lede">
+          The running log, newest first — plant announcements, operations
+          notes, and whatever the catalogue did this quarter. The homepage
+          carries the latest few; this page keeps all of them.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="log-h">
+      <div class="wrap">
+        <h2 id="log-h" class="visually-hidden">All news items</h2>
+        <ol class="log">
+          {news.map((item) => (
+            <li class="log-item">
+              <div class="log-meta">
+                <time datetime={item.datetime}>{item.date}</time>
+                <span class="news-tag">{item.tag}</span>
+              </div>
+              <div class="log-body">
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+                {item.image && (
+                  <figure class="photo-figure log-figure">
+                    <img
+                      src={item.image}
+                      width={item.imageWidth}
+                      height={item.imageHeight}
+                      alt={item.imageAlt}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <figcaption>
+                      {item.caption}
+                      <span class="photo-credit">
+                        SipsCo &middot;{' '}
+                        <time datetime={item.photoDatetime}>{item.photoDate}</time>
+                      </span>
+                    </figcaption>
+                  </figure>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="section log-closing" aria-labelledby="log-cta-h">
+      <div class="wrap">
+        <h2 id="log-cta-h">Looking for something we have not written up?</h2>
+        <p>
+          Press enquiries go straight to the yard, and we would rather answer
+          than have you guess from a headline.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="mailto:press@dirt.incantationjunction.com">Email press</a>
+          <a class="btn btn-ghost" href="/#news">Back to the homepage</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  /* Same opener as the R&D page: a plain heading block rather than the
+     homepage's hero, so it sizes its own h1. */
+  .page-head h1 {
+    font-size: clamp(1.9rem, 5vw, 3rem);
+    max-width: 18ch;
+  }
+
+  .page-lede {
+    font-size: clamp(1.05rem, 2vw, 1.2rem);
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin-bottom: 0;
+  }
+
+  /* A log rather than the homepage's card grid: one column, entries divided
+     by a rule. Cards work for three items and stop working at thirty. */
+  .log {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: clamp(2rem, 5vw, 3rem);
+  }
+
+  .log-item {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 1fr;
+    padding-top: clamp(2rem, 5vw, 3rem);
+    border-top: 1px solid var(--line);
+  }
+
+  /* The first entry sits directly under the section heading, so it needs no
+     rule of its own to separate it from anything. */
+  .log-item:first-child {
+    padding-top: 0;
+    border-top: none;
+  }
+
+  /* Wide screens put the date in a left rail so every entry's title starts
+     on the same line, photo or no photo. */
+  @media (min-width: 800px) {
+    .log-item {
+      grid-template-columns: 14rem minmax(0, 1fr);
+      gap: clamp(1.5rem, 4vw, 3rem);
+    }
+  }
+
+  .log-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+  }
+
+  /* Aligns the rail's cap-height with the title's rather than its box, which
+     otherwise sits a few pixels high against the larger type. */
+  @media (min-width: 800px) {
+    .log-meta {
+      align-items: flex-start;
+      align-content: flex-start;
+      padding-top: 0.35rem;
+    }
+  }
+
+  /* Same pill as the homepage's .news-tag, which is scoped to that page. */
+  .news-tag {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    font-weight: 650;
+    color: var(--accent);
+  }
+
+  .log-body h3 {
+    font-size: clamp(1.25rem, 2.4vw, 1.55rem);
+    margin-bottom: 0.5rem;
+  }
+
+  .log-body p {
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  /* Capped well under the column width: these are screenshots, and a
+     1455px-wide one blown across the full measure dwarfs the entry it
+     belongs to. */
+  .log-figure {
+    margin: 1.4rem 0 0;
+    max-width: 34rem;
+  }
+
+  .log-figure img { border-radius: calc(var(--radius) - 4px); }
+
+  .log-closing p {
+    color: var(--ink-soft);
+    max-width: 52ch;
+  }
+
+  .log-closing .cta-row { margin-top: 1.5rem; }
+</style>
