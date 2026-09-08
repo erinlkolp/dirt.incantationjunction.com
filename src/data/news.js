@@ -21,12 +21,12 @@ export const news = [
     tag: 'R&D',
     title: 'Autonomous Extraction lab comes online in October',
     body:
-      'The new R&D facility is finished and powering up: a glass-walled cut ' +
-      'into the working face, with console banks on both sides and the north ' +
-      'face itself visible through the wall. It is a bench for the ' +
-      'Autonomous Extraction programme \u2014 somewhere to work on the ' +
-      'units\u2019 control software and put a build through its tests ' +
-      'without spending a shift to find out.',
+      'The new R&D facility is going up: a glass-walled cut into the ' +
+      'working face, with console banks going in on both sides and the ' +
+      'north face itself visible through the wall. It is being built as a ' +
+      'bench for the Autonomous Extraction programme \u2014 somewhere to ' +
+      'work on the units\u2019 control software and put a build through ' +
+      'its tests without spending a shift to find out.',
     image: '/img/rnd-facility.webp',
     imageWidth: 1455,
     imageHeight: 893,
@@ -62,6 +62,77 @@ export const news = [
     photoDate: 'September 2, 2026',
   },
   {
+    datetime: '2026-09-05',
+    date: 'September 5, 2026',
+    tag: 'R&D',
+    title: 'Three units arrive for the beta bench',
+    body:
+      'Three extraction units are on the lab bench, deliberately kept off ' +
+      'the north face. Once the room is live, software will reach them ' +
+      'before it reaches the fleet, so a bad build costs a controlled run ' +
+      'instead of a shift. They are the same machine as Unit 7, down to ' +
+      'the pickaxe.',
+    image: '/img/rnd-beta-units.webp',
+    imageWidth: 1455,
+    imageHeight: 893,
+    imageAlt:
+      'Three white automated mining machines with teal pickaxes mounted on ' +
+      'their sides, lined up on a long white bench in a glass-walled room ' +
+      'at night, green light strips set into the floor',
+    caption:
+      'Three beta units on the bench, north face pattern, pickaxes ' +
+      'fitted. The room around them is not finished.',
+    photoDatetime: '2026-09-05',
+    photoDate: 'September 5, 2026',
+  },
+  {
+    datetime: '2026-09-03',
+    date: 'September 3, 2026',
+    tag: 'Facilities',
+    title: 'The console rows go in',
+    body:
+      'The floor is down, the plinths are set, and the consoles are going ' +
+      'in a double row the length of the room. The lounge end went in ' +
+      'ahead of the working end, which is the opposite of how these ' +
+      'usually go. Nothing is in service yet \u2014 that is October.',
+    image: '/img/rnd-facility-floor.webp',
+    imageWidth: 1455,
+    imageHeight: 893,
+    imageAlt:
+      'A long glass-walled room at night seen from the doorway, a double ' +
+      'row of computers on white plinths receding into the distance, green ' +
+      'lounge furniture in the foreground',
+    caption:
+      'The floor from the entrance, consoles running to the far wall, ' +
+      'fit-out still under way.',
+    photoDatetime: '2026-09-03',
+    photoDate: 'September 3, 2026',
+  },
+  {
+    datetime: '2026-08-26',
+    date: 'August 26, 2026',
+    tag: 'Facilities',
+    title: 'The lounge end gets its furniture',
+    body:
+      'Lea, our Chief Operating Officer and Decorator Extraordinaire, spent ' +
+      'the week on the half of the lab that is not consoles: sofas, a low ' +
+      'table, and a reading chair under the glass. Her case for it is that ' +
+      'anyone debugging at two in the morning should have somewhere to sit ' +
+      'that is not a plinth.',
+    image: '/img/rnd-lounge.webp',
+    imageWidth: 1455,
+    imageHeight: 893,
+    imageAlt:
+      'A figure in a purple and gold robe and pointed hat placing a green ' +
+      'block near the ceiling of a glass-roofed room, with green sofas, an ' +
+      'armchair holding an open book, and a low table below',
+    caption:
+      'Lea, COO and Decorator Extraordinaire, placing lounge furniture ' +
+      'while the fit-out carries on around her.',
+    photoDatetime: '2026-08-26',
+    photoDate: 'August 26, 2026',
+  },
+  {
     datetime: '2026-08-18',
     date: 'August 18, 2026',
     tag: 'Operations',
@@ -69,6 +140,26 @@ export const news = [
     body:
       'Second shift at the main yard cuts the typical order-to-delivery window ' +
       'from four days to two across all standard blends.',
+  },
+  {
+    datetime: '2026-08-12',
+    date: 'August 12, 2026',
+    tag: 'Facilities',
+    title: 'The R&D lab takes shape under glass',
+    body:
+      'The glass is on and the floor is down. The first plinths are already ' +
+      'carrying hardware, though most of what will sit on them is still in ' +
+      'crates and the far end is bare dirt. Lea is running the build.',
+    image: '/img/rnd-facility-fitout.webp',
+    imageWidth: 1455,
+    imageHeight: 893,
+    imageAlt:
+      'A figure in a purple and gold robe and pointed hat at the edge of a ' +
+      'bright glass-roofed room under construction, with computers on white ' +
+      'plinths, a green desk and chair, and stacked dirt blocks on the floor',
+    caption: 'Lea, COO, on site during fit-out.',
+    photoDatetime: '2026-08-12',
+    photoDate: 'August 12, 2026',
   },
   {
     datetime: '2026-07-02',
