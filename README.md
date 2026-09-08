@@ -96,12 +96,15 @@ the site is rebuilt.
 The photographs are Minecraft screenshots, which is what the footer disclaimer
 covers. Anything added here has to stay one.
 
-Screenshots arrive as PNG and are published as WebP at their source
-dimensions. Crop before converting: nothing in the repo resizes them, and the
-file's own size is what the page declares to the browser. The alpha channel is
-dropped, and the assertion below fails rather than quietly flattening a real
-transparency -- a screenshot is opaque, so a transparent one is a sign the
-file is not what it is assumed to be.
+Screenshots arrive as PNG and are published as WebP. Crop before converting:
+nothing here recomposes a shot, and the file's own size is what the page
+declares to the browser. Most captures are published at their source
+dimensions; a capture from a larger window is scaled to 1455 wide first, which
+is the width the R&D set already shares, so the photos agree on width and
+differ only in height. The alpha channel is dropped, and the assertion below
+fails rather than quietly flattening a real transparency -- a screenshot is
+opaque, so a transparent one is a sign the file is not what it is assumed to
+be.
 
 ```sh
 python3 - <<'PY'
@@ -109,7 +112,10 @@ from PIL import Image
 im = Image.open("/path/to/shot.png")
 if im.mode == "RGBA":
     assert im.getchannel("A").getextrema()[0] == 255, "real transparency"
-im.convert("RGB").save("public/img/<name>.webp", quality=82, method=6)
+im = im.convert("RGB")
+if im.width > 1455:                       # only for an oversized capture
+    im = im.resize((1455, round(im.height * 1455 / im.width)), Image.LANCZOS)
+im.save("public/img/<name>.webp", quality=82, method=6)
 print(Image.open("public/img/<name>.webp").size)
 PY
 ```

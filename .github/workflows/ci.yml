@@ -66,6 +66,7 @@ jobs:
           test -f dist/img/rnd-facility-floor.webp
           test -f dist/img/rnd-lounge.webp
           test -f dist/img/rnd-beta-units.webp
+          test -f dist/img/rnd-coffee-bar.webp
           # every page past the homepage is its own route, so a build that
           # silently drops one would still pass every assertion above
           test -f dist/rnd/index.html

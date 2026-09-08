@@ -10,11 +10,38 @@
 // An item may carry a photo: `image` plus its intrinsic `imageWidth` and
 // `imageHeight`, `imageAlt`, `caption`, and the `photo*` pair the credit line
 // renders. The dimensions live here rather than in the template because the
-// two photos are not the same shape -- a single hard-coded width and height
-// in the markup would hand the browser the wrong aspect ratio for one of
-// them. The homepage shows the photo on its lead item only; /news/ shows
+// photos are not all the same shape -- a single hard-coded width and height
+// in the markup would hand the browser the wrong aspect ratio for every
+// photo but one. The homepage shows the photo on its lead item only; /news/ shows
 // every photo it finds.
 export const news = [
+  {
+    datetime: '2026-09-08',
+    date: 'September 8, 2026',
+    tag: 'Facilities',
+    title: 'Lea wins the coffee argument',
+    body:
+      'The lounge end got the sofas; the coffee went in at the other end, ' +
+      'on a bench within reach of the consoles. Lea\u2019s case in August ' +
+      'was that anyone debugging at two in the morning should have ' +
+      'somewhere to sit that is not a plinth. The follow-on argument was ' +
+      'that they should not then have to walk the length of the room for a ' +
+      'cup, and it went the same way. Machine, cups, and a jar of biscuits ' +
+      'that is not expected to survive October.',
+    image: '/img/rnd-coffee-bar.webp',
+    imageWidth: 1455,
+    imageHeight: 751,
+    imageAlt:
+      'A dark wooden bench in a glass-walled room at night holding an ' +
+      'espresso machine, two white cups and a lidded jar of biscuits, a ' +
+      'green carpet runner and lit floor panels beside it and blue wall ' +
+      'charts behind',
+    caption:
+      'The coffee bench at the working end, in reach of the consoles ' +
+      'rather than the sofas.',
+    photoDatetime: '2026-09-07',
+    photoDate: 'September 7, 2026',
+  },
   {
     datetime: '2026-09-07',
     date: 'September 7, 2026',
