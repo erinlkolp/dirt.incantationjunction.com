@@ -19,12 +19,14 @@ export const news = [
     datetime: '2026-09-07',
     date: 'September 7, 2026',
     tag: 'R&D',
-    title: 'Substrate lab comes online in October',
+    title: 'Autonomous Extraction lab comes online in October',
     body:
       'The new R&D facility is finished and powering up: a glass-walled cut ' +
-      'into the working face, with console banks for the extraction fleet on ' +
-      'both sides and the north face itself visible through the wall. Blend ' +
-      'Formulation moves in first; the pilot line follows in November.',
+      'into the working face, with console banks on both sides and the north ' +
+      'face itself visible through the wall. It is a bench for the ' +
+      'Autonomous Extraction programme \u2014 somewhere to work on the ' +
+      'units\u2019 control software and put a build through its tests ' +
+      'without spending a shift to find out.',
     image: '/img/rnd-facility.webp',
     imageWidth: 1455,
     imageHeight: 893,
