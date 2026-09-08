@@ -10,7 +10,7 @@
     "check": "astro check",
     "check:drift": "node tools/check-source-drift.mjs"
   },
-  "description": "One-page corporate site for SipsCo",
+  "description": "Corporate site for SipsCo: marketing homepage, news log, and R&D field report",
   "engines": {
     "node": ">=24"
   },
