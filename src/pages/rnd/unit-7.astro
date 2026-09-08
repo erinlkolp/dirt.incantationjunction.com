@@ -91,7 +91,8 @@ const debrisBlocks = [3, 4, 5].map((c) => [c, 5]);
           is set down, and hauls what it removes to a chest at the edge of the
           work. It runs unattended. It has been cutting the north face since
           spring. This report covers what the unit does, what it refuses to
-          do, and how we satisfied ourselves that the difference holds.
+          do, how it takes a new version of itself, and how we satisfied
+          ourselves that the difference holds.
         </p>
       </section>
 
@@ -300,14 +301,24 @@ const debrisBlocks = [3, 4, 5].map((c) => [c, 5]);
           than anyone expected.
         </p>
 
+        <p>
+          An empty layer is only evidence if the unit actually reached all of
+          it. A cell it could not enter &mdash; a unit stuck against a block it
+          has failed to cut, out of the six attempts it allows itself &mdash;
+          is not a cell known to be empty, and a layer holding one is no longer
+          grounds for calling the job done. The unit carries on upward and
+          reports the skipped cells rather than quietly finishing beneath them.
+        </p>
+
         <figure class="listing">
           <pre><code>{stopCondition}</code></pre>
           <figcaption>
             <b>Listing 1.</b> The stop condition, verbatim
             from <code>turtles/flattener.lua</code>. <code>sawAbove</code> is
             the free lookahead; <code>SCAN_MIN</code> is the four-layer floor
-            beneath it. Both conditions must hold, and neither is reachable
-            from an operator setting.
+            beneath it; <code>skipped</code> is the count of cells the unit
+            could not reach. All three conditions must hold, and none is
+            reachable from an operator setting.
           </figcaption>
         </figure>
       </section>
@@ -315,8 +326,9 @@ const debrisBlocks = [3, 4, 5].map((c) => [c, 5]);
       <section aria-labelledby="s4">
         <h2 id="s4"><span class="sec-no" aria-hidden="true">4.</span> What the unit will not do</h2>
         <p>
-          The guarantees below are structural. They are not settings, and an
-          operator cannot switch them off by accident.
+          The guarantees below are structural. With one exception, noted where
+          it falls, they are not settings, and an operator cannot switch them
+          off by accident.
         </p>
         <p>
           <strong>It will not cut below the floor.</strong> The elevation at
@@ -342,9 +354,24 @@ const debrisBlocks = [3, 4, 5].map((c) => [c, 5]);
           the dirt if one is not.
         </p>
         <p>
-          <strong>It will not burn its own fuel reserve.</strong> Coal,
-          charcoal and blaze rods are recognised as fuel and are never
-          delivered to the chest.
+          <strong>It will not hoard its own fuel.</strong> Coal, charcoal and
+          blaze rods are recognised as fuel. The unit keeps sixty-four of them
+          aboard and posts the remainder to the chest with everything else it
+          has cut.
+        </p>
+
+        <p class="withdrawn">
+          <strong>Withdrawn at Rev. C.</strong> Rev. B of this report stated
+          that fuel was never delivered to the chest. That was the defect, not
+          the guarantee. Coal is ordinary spoil at the face, and a unit that
+          treats every piece of it as reserve fills all sixteen slots with
+          material it refuses to put down. Observed under test: a collection
+          unit on a coal-littered yard seized after sixteen cells with 5,376
+          coal on the ground and 1,024 aboard, and halted there. An extraction
+          unit driven through a coal seam abandoned 838 blocks mid-job and
+          delivered nothing. Sixty-four is a working reserve; the rest is
+          cargo. The figure is the exception noted above: it is an operator
+          setting, and it is the only one in this section.
         </p>
         <p>
           <strong>It will not spin.</strong> If the unit comes home full and
@@ -368,8 +395,9 @@ const debrisBlocks = [3, 4, 5].map((c) => [c, 5]);
           under its own power rather than stopping in the field.
         </p>
         <p>
-          When the inventory fills, the unit walks to the chest, empties
-          everything that is not fuel, and resumes at the exact cell it left.
+          When the inventory fills, the unit walks to the chest, empties its
+          load down to the fuel reserve described in section 4, and resumes at
+          the exact cell it left.
           This accounts for essentially all of Unit 7's downtime. The 94%
           uptime figure quoted elsewhere is not a reliability measure; it is
           the fraction of the shift the unit is not standing at a chest,
@@ -390,6 +418,26 @@ const debrisBlocks = [3, 4, 5].map((c) => [c, 5]);
           clean pass. It runs a full circuit, sleeps an hour, and runs
           another.
         </p>
+
+        <p>
+          The sideways sweep is the one direction that can reach outside the
+          pad, and at ground level it is the only one doing any work. It is
+          therefore taken only when the cell in front belongs to the ten-by-ten
+          &mdash; which excludes the row behind the near edge, where the chest
+          stands. Rev. B described the unit as staying inside the area. At
+          ground level that was an aspiration rather than a fact, and a marker
+          placed one row outside the pad was collected during testing. It is
+          now bounded, and the case is in the harness.
+        </p>
+
+        <p>
+          A single cell can hold more litter than the unit can carry. Rather
+          than take what fits and move on, it returns to the chest and comes
+          back to the same cell, up to eight times, until the ground is clear.
+          Before this the unit resumed at the next cell along and counted the
+          pass complete: 400 items of 2,000 were left behind, one per cell,
+          against a report of a clean sweep.
+        </p>
       </section>
 
       <section aria-labelledby="s7">
@@ -397,9 +445,10 @@ const debrisBlocks = [3, 4, 5].map((c) => [c, 5]);
         <p>
           Both units are exercised against a stubbed voxel world that
           implements the movement and inspection interface without requiring a
-          live site. The two harnesses hold {testCount} cases between them.
-          Their names are the guarantees restated, and they are reproduced
-          here in full.
+          live site. The update subsystem is exercised against a stubbed
+          network and filesystem on the same principle. The three harnesses
+          hold {testCount} cases between them. Their names are the guarantees
+          restated, and they are reproduced here in full.
         </p>
         <div class="suites">
           {suites.map((s) => (
@@ -418,11 +467,63 @@ const debrisBlocks = [3, 4, 5].map((c) => [c, 5]);
       </section>
 
       <section aria-labelledby="s8">
-        <h2 id="s8"><span class="sec-no" aria-hidden="true">8.</span> Availability</h2>
+        <h2 id="s8">
+          <span class="sec-no" aria-hidden="true">8.</span> Taking a new version
+        </h2>
         <p>
-          Unit 7's routines are not a trade secret. Both programs and the test
-          harness are published in full. Run them on your own fleet &mdash; we
-          ask only that you tell us what we got wrong.
+          A fleet is only as current as its slowest visit. Units may now fetch
+          their own replacement from the published repository and restart into
+          it, which removes the walk to sixteen turtles and the transcription
+          errors that come with it.
+        </p>
+        <p>
+          Rollout is driven by one line. Each program carries its own version
+          number, and the copy on the server is compared against it component
+          by component &mdash; numerically, so 1.10 follows 1.9 rather than
+          preceding it. Publishing a change without raising that number rolls
+          out nothing. Raising it rolls out to every unit that asks.
+        </p>
+        <p>
+          <strong>An update lands only where stopping is free.</strong> Neither
+          unit writes its position to disk, so a restart partway through a job
+          would bring the unit back up believing it stood at the corner and set
+          it to work on the wrong ground. The extraction unit therefore checks
+          once, at startup, before its first move. The collection unit checks
+          at startup and again between passes, parked on its start cell with an
+          empty hold &mdash; the state a fresh run expects to boot into
+          anyway. There is no mid-job check, and adding one would be a defect.
+        </p>
+        <p>
+          <strong>A release is refused unless it is fit to install.</strong>
+          The realistic failure is not a bad program but a truncated download,
+          and a unit that writes half a file over itself is a unit somebody has
+          to walk out to. Every download is therefore parsed before it is
+          written, and one that will not compile is discarded. So is one
+          carrying no version line, and one that arrives at less than half the
+          size of the file it would replace &mdash; a cut that lands on a
+          statement boundary can still compile, and the length is what gives it
+          away. The previous version is kept alongside the new one. Rollback is
+          deliberate and manual.
+        </p>
+        <p>
+          <strong>Nothing here is load-bearing.</strong> A unit with no network,
+          no update library, or a server returning nonsense carries on running
+          the program it already has, and the harness holds a case for each of
+          those. A unit also restarts only when it knows it can come back up
+          running; otherwise it installs the new version and defers to the next
+          manual start. That guarantee ships switched off, because switching it
+          on writes a startup file to the computer, and that is the operator's
+          decision rather than ours.
+        </p>
+      </section>
+
+      <section aria-labelledby="s9">
+        <h2 id="s9"><span class="sec-no" aria-hidden="true">9.</span> Availability</h2>
+        <p>
+          Unit 7's routines are not a trade secret. Both programs, the update
+          library and the test harnesses are published in full. Run them on
+          your own fleet &mdash; we ask only that you tell us what we got
+          wrong.
         </p>
         <p class="paper-cta">
           <a class="btn btn-primary" href={REPO} target="_blank" rel="noopener"
@@ -536,6 +637,17 @@ const debrisBlocks = [3, 4, 5].map((c) => [c, 5]);
   }
 
   .paper strong { font-weight: 650; }
+
+  /* An erratum against an earlier revision. Set apart from the guarantees it
+     corrects, and quieter than them, because it is document history rather
+     than a statement about the unit. The rule is on the inline-start edge so
+     it survives the print block, which keeps borders and drops fills. */
+  .withdrawn {
+    border-inline-start: 2px solid var(--line);
+    padding-inline-start: 0.9rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
 
   /* Document control block. Set as a form rather than as prose -- mono values
      under uppercase labels -- because that is what it is. */
@@ -856,6 +968,12 @@ const debrisBlocks = [3, 4, 5].map((c) => [c, 5]);
       grid-template-columns: 1fr 1fr;
       gap: 0.9rem;
       margin-bottom: 0.42rem;
+    }
+
+    /* Keep each panel whole, but let the group break: three harnesses of
+       names no longer fit on one page, and refusing to break the group just
+       pushes the whole of section 7 onto the next one. */
+    .suite {
       break-inside: avoid;
     }
 

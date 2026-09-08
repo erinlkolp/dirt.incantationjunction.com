@@ -51,19 +51,33 @@ const read = (rel) => {
 const lua = {
   'turtles/flattener.lua': read('turtles/flattener.lua'),
   'turtles/sweeper.lua': read('turtles/sweeper.lua'),
+  'lib/updater.lua': read('lib/updater.lua'),
 };
 const luaTests = {
   'test/flattener_test.lua': read('test/flattener_test.lua'),
   'test/sweeper_test.lua': read('test/sweeper_test.lua'),
+  'test/updater_test.lua': read('test/updater_test.lua'),
 };
 
 // ---------------------------------------------------------------- parsing
 
-/** `local NAME = 123` at the head of a program. Comments after are ignored. */
+/**
+ * `local NAME = <literal>` at the head of a program, or `module.NAME =
+ * <literal>` for the ones the updater hangs off its own table. Comments after
+ * are ignored.
+ *
+ * Numbers, quoted strings and booleans are all config the appendix prints, so
+ * all three are read here; the kind decides how the printed value is checked.
+ */
 function constants(src) {
   const out = new Map();
-  const re = /^local\s+([A-Z][A-Z0-9_]*)\s*=\s*(-?\d+)\s*(?:--.*)?$/gm;
-  for (const m of src.matchAll(re)) out.set(m[1], Number(m[2]));
+  const re =
+    /^(?:local\s+|[a-z][A-Za-z0-9_]*\.)([A-Z][A-Z0-9_]*)\s*=\s*(?:(-?\d+(?:\.\d+)?)|"([^"]*)"|(true|false))\s*(?:--.*)?$/gm;
+  for (const m of src.matchAll(re)) {
+    const [, name, num, str, bool] = m;
+    if (num !== undefined) out.set(name, { kind: 'number', value: Number(num) });
+    else out.set(name, { kind: 'literal', value: str !== undefined ? str : bool });
+  }
   return out;
 }
 
@@ -85,7 +99,11 @@ function testNames(src) {
 const digits = (s) => s.replace(/(\d),(?=\d)/g, '$1');
 
 /** Whole-number match, so 3 cannot satisfy a prose that only says 32. */
-const hasNumber = (prose, n) => new RegExp(`(?<!\\d)${n}(?!\\d)`).test(digits(prose));
+const hasNumber = (prose, n) =>
+  new RegExp(`(?<!\\d)${String(n).replace(/\./g, '\\.')}(?!\\d)`).test(digits(prose));
+
+/** A version, a branch, a file suffix: printed as itself, so it must appear. */
+const hasLiteral = (prose, s) => prose.toLowerCase().includes(String(s).toLowerCase());
 
 // ------------------------------------------------- 1. appendix constants
 
@@ -120,7 +138,7 @@ for (const section of specs) {
       continue;
     }
 
-    const values = [];
+    const entries = [];
     let unknown = false;
     for (const n of names) {
       if (!consts.has(n)) {
@@ -128,9 +146,27 @@ for (const section of specs) {
         unknown = true;
         break;
       }
-      values.push(consts.get(n));
+      entries.push(consts.get(n));
     }
     if (unknown) continue;
+
+    // A version, a branch name, a boolean flag: there is no arithmetic to do,
+    // so the appendix has to carry the Lua literal somewhere in its wording.
+    if (entries.some((e) => e.kind === 'literal')) {
+      if (entries.length !== 1) {
+        fail(`${ident}`, `${section.source} pairs a string with a number (row "${label}")`);
+        continue;
+      }
+      const literal = entries[0].value;
+      if (!hasLiteral(value, literal)) {
+        fail(`${names[0]}`, `${section.source} has "${literal}", appendix says "${value}"`);
+      } else {
+        pass(`${names[0]}`, `"${literal}" appears in "${value}"`);
+      }
+      continue;
+    }
+
+    const values = entries.map((e) => e.value);
 
     // A composite like WIDTH x LENGTH must appear as the pair, not just as
     // two numbers that happen to be somewhere in the sentence.
